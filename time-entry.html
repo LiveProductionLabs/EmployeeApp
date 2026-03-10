@@ -133,7 +133,11 @@
   <a class="nav-back" href="index.html">← Hub</a>
   <div class="nav-bar"></div>
   <div class="nav-title">Time Entry</div>
-  <div class="nav-right">Week of <span id="nav-week">—</span></div>
+  <div class="nav-right" style="display:flex;align-items:center;gap:8px;">
+    <button onclick="shiftWeek(-1)" style="background:none;border:1px solid var(--border);color:var(--accent);font-size:14px;padding:4px 10px;border-radius:6px;cursor:pointer;line-height:1;">&#8249;</button>
+    <span id="nav-week" style="font-size:11px;color:var(--text);white-space:nowrap;">—</span>
+    <button onclick="shiftWeek(1)" id="btn-next-week" style="background:none;border:1px solid var(--border);color:var(--accent);font-size:14px;padding:4px 10px;border-radius:6px;cursor:pointer;line-height:1;">&#8250;</button>
+  </div>
 </nav>
 
 <div class="main">
@@ -219,7 +223,11 @@
 
   <div class="form-field">
     <label class="form-label">Break (minutes)</label>
-    <input class="form-input" type="number" id="f-break" min="0" placeholder="0" onfocus="if(this.value==='0')this.value=''" onblur="if(this.value==='')this.value='0'" oninput="updateCalc()" />
+    <div style="display:flex;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <button onclick="adjBreak(-15)" style="background:none;border:none;border-right:1px solid var(--border);color:var(--accent);font-size:20px;padding:12px 18px;cursor:pointer;line-height:1;flex-shrink:0;">&#9660;</button>
+      <input type="number" id="f-break" min="0" value="30" oninput="updateCalc()" style="flex:1;background:none;border:none;outline:none;color:var(--text);font-family:'DM Mono',monospace;font-size:14px;text-align:center;padding:12px 0;" />
+      <button onclick="adjBreak(15)" style="background:none;border:none;border-left:1px solid var(--border);color:var(--accent);font-size:20px;padding:12px 18px;cursor:pointer;line-height:1;flex-shrink:0;">&#9650;</button>
+    </div>
   </div>
 
   <div class="calc-row">
@@ -236,7 +244,7 @@
       <div class="calc-lbl">DT</div>
     </div>
     <div class="calc-item">
-      <input class="calc-num num-total calc-edit" id="c-total" type="text" inputmode="decimal" placeholder="—" oninput="overrideCalc('total',this.value)" onfocus="markOverride('total')" />
+      <input class="calc-num num-total calc-edit" id="c-total" type="text" readonly style="cursor:default;" />
       <div class="calc-lbl">Total</div>
     </div>
   </div>
@@ -329,12 +337,9 @@ function fmtField(side, part){
   else document.getElementById(`${side}-h`).value = T[side].h;
 }
 
-// Override state — null means use calculated value
-let overrides = { reg: null, ot: null, dt: null, total: null };
+let overrides = { reg: null, ot: null, dt: null };
 
-function markOverride(field) {
-  // just focuses — actual override set on input
-}
+function markOverride(field) {}
 
 function overrideCalc(field, val) {
   const n = parseFloat(val);
@@ -342,14 +347,25 @@ function overrideCalc(field, val) {
   const anyOverride = Object.values(overrides).some(v => v !== null);
   document.getElementById('override-warn').style.display = anyOverride ? 'block' : 'none';
   document.getElementById(`c-${field}`).classList.toggle('overridden', overrides[field] !== null);
+  // Recalc total from current values
+  const reg   = overrides.reg ?? parseFloat(document.getElementById('c-reg').value) || 0;
+  const ot    = overrides.ot  ?? parseFloat(document.getElementById('c-ot').value)  || 0;
+  const dt    = overrides.dt  ?? parseFloat(document.getElementById('c-dt').value)  || 0;
+  document.getElementById('c-total').value = +(reg + ot + dt).toFixed(2);
 }
 
 function clearOverrides() {
-  overrides = { reg: null, ot: null, dt: null, total: null };
-  ['reg','ot','dt','total'].forEach(f => {
+  overrides = { reg: null, ot: null, dt: null };
+  ['reg','ot','dt'].forEach(f => {
     document.getElementById(`c-${f}`).classList.remove('overridden');
   });
   document.getElementById('override-warn').style.display = 'none';
+  updateCalc();
+}
+
+function adjBreak(delta) {
+  const el = document.getElementById('f-break');
+  el.value = Math.max(0, (parseInt(el.value) || 0) + delta);
   updateCalc();
 }
 
@@ -373,10 +389,14 @@ function updateCalc(){
   const brk=parseInt(document.getElementById('f-break').value)||0;
   const h=calcHours(to24('s'), to24('e'), brk);
   if(!h) return;
-  if(overrides.reg === null)   { document.getElementById('c-reg').value   = h.regular+'h'; }
-  if(overrides.ot === null)    { document.getElementById('c-ot').value    = h.ot+'h'; }
-  if(overrides.dt === null)    { document.getElementById('c-dt').value    = h.dt+'h'; }
-  if(overrides.total === null) { document.getElementById('c-total').value = h.total+'h'; }
+  if(overrides.reg === null) { document.getElementById('c-reg').value = h.regular; }
+  if(overrides.ot === null)  { document.getElementById('c-ot').value  = h.ot; }
+  if(overrides.dt === null)  { document.getElementById('c-dt').value  = h.dt; }
+  // Total always recalculates from the three fields
+  const reg   = overrides.reg ?? h.regular;
+  const ot    = overrides.ot  ?? h.ot;
+  const dt    = overrides.dt  ?? h.dt;
+  document.getElementById('c-total').value = +(reg + ot + dt).toFixed(2);
 }
 
 function openAdd(){
@@ -387,9 +407,9 @@ function openAdd(){
   document.getElementById('f-break').value='0';
   document.getElementById('f-notes').value='';
   document.getElementById('btn-del').style.display='none';
-  overrides = { reg: null, ot: null, dt: null, total: null };
+  overrides = { reg: null, ot: null, dt: null };
   document.getElementById('override-warn').style.display='none';
-  ['reg','ot','dt','total'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
+  ['reg','ot','dt'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
   from24('s','08:00'); from24('e','17:00');
   renderPicker('s'); renderPicker('e');
   updateCalc();
@@ -407,9 +427,9 @@ function openEditById(id){
   document.getElementById('f-break').value=e.break_minutes||0;
   document.getElementById('f-notes').value=e.notes||'';
   document.getElementById('btn-del').style.display='block';
-  overrides = { reg: null, ot: null, dt: null, total: null };
+  overrides = { reg: null, ot: null, dt: null };
   document.getElementById('override-warn').style.display='none';
-  ['reg','ot','dt','total'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
+  ['reg','ot','dt'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
   from24('s', e.start_time?.slice(0,5)||'08:00');
   from24('e', e.end_time?.slice(0,5)||'17:00');
   renderPicker('s'); renderPicker('e');
@@ -441,11 +461,11 @@ async function saveEntry(){
   const s=to24('s'), e=to24('e');
   const h=calcHours(s,e,brk);
   const finalH = {
-    regular: overrides.reg   ?? h.regular,
-    ot:      overrides.ot    ?? h.ot,
-    dt:      overrides.dt    ?? h.dt,
-    total:   overrides.total ?? h.total
+    regular: overrides.reg ?? h.regular,
+    ot:      overrides.ot  ?? h.ot,
+    dt:      overrides.dt  ?? h.dt,
   };
+  finalH.total = +(finalH.regular + finalH.ot + finalH.dt).toFixed(2);
   const payload={
     employee_id:currentUser.id, job_id:jobId, entry_date:date,
     start_time:s, end_time:e, break_minutes:brk,
@@ -520,10 +540,32 @@ function renderEntries(){
   } else { area.innerHTML=''; }
 }
 
-function getWeekDates(){
-  const d=new Date(),day=d.getDay(),mon=new Date(d);
-  mon.setDate(d.getDate()-(day===0?6:day-1));
+let weekOffset = 0; // 0 = current week, -1 = last week, etc.
+
+function getWeekDates(offset=0){
+  const d=new Date();
+  const day=d.getDay();
+  const mon=new Date(d);
+  mon.setDate(d.getDate()-(day===0?6:day-1) + offset*7);
   return Array.from({length:7},(_,i)=>{const dd=new Date(mon);dd.setDate(mon.getDate()+i);return dd.toISOString().split('T')[0];});
+}
+
+function fmtWeekLabel(dates){
+  const opts={month:'short',day:'numeric'};
+  const s=new Date(dates[0]+'T12:00:00').toLocaleDateString('en-US',opts);
+  const e=new Date(dates[6]+'T12:00:00').toLocaleDateString('en-US',opts);
+  return s+' – '+e;
+}
+
+async function shiftWeek(dir){
+  weekOffset+=dir;
+  weekDates=getWeekDates(weekOffset);
+  document.getElementById('nav-week').textContent=fmtWeekLabel(weekDates);
+  // Hide forward arrow if on current week
+  document.getElementById('btn-next-week').style.opacity=weekOffset>=0?'0.2':'1';
+  document.getElementById('btn-next-week').style.pointerEvents=weekOffset>=0?'none':'auto';
+  await loadEntries();
+  await loadSheet();
 }
 
 async function loadEntries(){
@@ -540,8 +582,10 @@ async function init(){
   const {data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='index.html';return;}
   currentUser=session.user;
-  weekDates=getWeekDates();
-  document.getElementById('nav-week').textContent=weekDates[0];
+  weekDates=getWeekDates(0);
+  document.getElementById('nav-week').textContent=fmtWeekLabel(weekDates);
+  document.getElementById('btn-next-week').style.opacity='0.2';
+  document.getElementById('btn-next-week').style.pointerEvents='none';
   const {data:rules}=await sb.from('pay_rules').select('*').maybeSingle();
   if(rules) payRules=rules;
   const {data:jobData}=await sb.from('jobs').select('job_id,job_name').in('status',['booked','completed']).order('job_name');
