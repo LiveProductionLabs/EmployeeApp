@@ -239,6 +239,8 @@ async function sendInvite() {
 }
 
 
+let employeeMap = {};
+
 async function loadTeam() {
   const { data: employees, error: empErr } = await sb
     .from('employees')
@@ -246,6 +248,8 @@ async function loadTeam() {
     .order('first_name');
 
   console.log('employees:', employees, 'err:', empErr);
+  employeeMap = {};
+  employees?.forEach(e => employeeMap[e.employee_id] = e);
 
   const list = document.getElementById('team-list');
   if (!employees || employees.length === 0) {
@@ -268,7 +272,7 @@ async function loadTeam() {
       `<span class="team-role role-${r}">${r}</span>`
     ).join(' ');
 
-    return `<div class="team-card ${e.is_active ? '' : 'inactive-dim'}" onclick="openModal(${JSON.stringify(JSON.stringify(e))})">
+    return `<div class="team-card ${e.is_active ? '' : 'inactive-dim'}" onclick="openModal('${e.employee_id}')">
       <div class="team-avatar">${initials}</div>
       <div class="team-info">
         <div class="team-name">${name} ${!e.is_active ? '<span style="color:var(--text2);font-size:11px;">(inactive)</span>' : ''}</div>
@@ -281,8 +285,9 @@ async function loadTeam() {
   }).join('');
 }
 
-async function openModal(empJson) {
-  const e = JSON.parse(empJson);
+async function openModal(employeeId) {
+  const e = employeeMap[employeeId];
+  if (!e) return;
   editingEmployee = e;
 
   document.getElementById('edit-first').value = e.first_name || '';
