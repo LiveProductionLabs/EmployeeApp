@@ -78,24 +78,37 @@
     .form-input:focus { border-color: var(--accent); }
     select.form-input option { background: #1e2e42; }
 
-    /* TAP TIME PICKER */
-    .pickers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    /* TIME PICKERS */
+    .pickers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 16px; }
     .picker-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
-    .tap-picker { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .tap-row { display: flex; align-items: center; }
 
-    /* Hour & Minute columns */
-    .tap-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
-    .tap-col + .tap-col { border-left: 1px solid var(--border); }
+    .tap-picker { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 10px 8px 8px; }
 
-    .tap-col-label { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; padding: 8px 0 4px; }
+    .tap-row { display: flex; align-items: center; justify-content: center; gap: 2px; }
 
-    .tap-btn { width: 100%; padding: 12px 0; background: none; border: none; color: var(--accent); font-size: 22px; cursor: pointer; transition: background 0.15s; line-height: 1; }
+    .tap-col { display: flex; flex-direction: column; align-items: center; flex: 1; }
+
+    .tap-btn { width: 100%; padding: 8px 0; background: none; border: none; color: var(--accent); font-size: 18px; cursor: pointer; border-radius: 6px; transition: background 0.15s; line-height: 1; }
     .tap-btn:active { background: #38bdf822; }
 
-    .tap-val { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--text); letter-spacing: 2px; padding: 6px 0; min-width: 52px; text-align: center; line-height: 1; }
+    /* Editable number — tap to type */
+    .tap-val {
+      font-family: 'Bebas Neue', sans-serif; font-size: 30px; color: var(--text);
+      letter-spacing: 1px; line-height: 1; text-align: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 6px;
+      width: 100%; padding: 6px 2px; cursor: pointer;
+      outline: none;
+    }
+    .tap-val:focus { border-color: var(--accent); color: var(--accent); background: #38bdf811; }
 
-    .tap-sep { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--text2); padding: 0 2px; align-self: center; margin-top: 28px; }
+    .tap-sep { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--text2); padding: 0 2px; padding-top: 14px; }
+
+    /* AM/PM toggle */
+    .ampm-col { display: flex; flex-direction: column; gap: 4px; margin-left: 6px; padding-top: 14px; }
+    .ampm-btn { padding: 8px 10px; border-radius: 6px; border: 1px solid var(--border); background: none; color: var(--text2); font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.15s; letter-spacing: 1px; }
+    .ampm-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
+
+    .col-lbl { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
 
     /* CALC */
     .calc-row { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
@@ -149,42 +162,52 @@
 
   <!-- TIME PICKERS -->
   <div class="pickers-row">
+    <!-- START -->
     <div>
       <span class="picker-label">Start Time</span>
       <div class="tap-picker">
         <div class="tap-row">
           <div class="tap-col">
-            <div class="tap-col-label">HR</div>
-            <button class="tap-btn" onclick="adj('sh',1)">▲</button>
-            <div class="tap-val" id="sh-val">08</div>
-            <button class="tap-btn" onclick="adj('sh',-1)">▼</button>
+            <div class="col-lbl">HR</div>
+            <button class="tap-btn" onclick="adjAMPM('s','h',1)">▲</button>
+            <input class="tap-val" id="s-h" type="text" inputmode="numeric" maxlength="2" value="8" onchange="editVal('s','h',this.value)" onblur="fmtField('s','h')" />
+            <button class="tap-btn" onclick="adjAMPM('s','h',-1)">▼</button>
           </div>
           <div class="tap-sep">:</div>
           <div class="tap-col">
-            <div class="tap-col-label">MIN</div>
-            <button class="tap-btn" onclick="adj('sm',1)">▲</button>
-            <div class="tap-val" id="sm-val">00</div>
-            <button class="tap-btn" onclick="adj('sm',-1)">▼</button>
+            <div class="col-lbl">MIN</div>
+            <button class="tap-btn" onclick="adjAMPM('s','m',1)">▲</button>
+            <input class="tap-val" id="s-m" type="text" inputmode="numeric" maxlength="2" value="00" onchange="editVal('s','m',this.value)" onblur="fmtField('s','m')" />
+            <button class="tap-btn" onclick="adjAMPM('s','m',-1)">▼</button>
+          </div>
+          <div class="ampm-col">
+            <button class="ampm-btn active" id="s-am" onclick="setAMPM('s','AM')">AM</button>
+            <button class="ampm-btn" id="s-pm" onclick="setAMPM('s','PM')">PM</button>
           </div>
         </div>
       </div>
     </div>
+    <!-- END -->
     <div>
       <span class="picker-label">End Time</span>
       <div class="tap-picker">
         <div class="tap-row">
           <div class="tap-col">
-            <div class="tap-col-label">HR</div>
-            <button class="tap-btn" onclick="adj('eh',1)">▲</button>
-            <div class="tap-val" id="eh-val">17</div>
-            <button class="tap-btn" onclick="adj('eh',-1)">▼</button>
+            <div class="col-lbl">HR</div>
+            <button class="tap-btn" onclick="adjAMPM('e','h',1)">▲</button>
+            <input class="tap-val" id="e-h" type="text" inputmode="numeric" maxlength="2" value="5" onchange="editVal('e','h',this.value)" onblur="fmtField('e','h')" />
+            <button class="tap-btn" onclick="adjAMPM('e','h',-1)">▼</button>
           </div>
           <div class="tap-sep">:</div>
           <div class="tap-col">
-            <div class="tap-col-label">MIN</div>
-            <button class="tap-btn" onclick="adj('em',1)">▲</button>
-            <div class="tap-val" id="em-val">00</div>
-            <button class="tap-btn" onclick="adj('em',-1)">▼</button>
+            <div class="col-lbl">MIN</div>
+            <button class="tap-btn" onclick="adjAMPM('e','m',1)">▲</button>
+            <input class="tap-val" id="e-m" type="text" inputmode="numeric" maxlength="2" value="00" onchange="editVal('e','m',this.value)" onblur="fmtField('e','m')" />
+            <button class="tap-btn" onclick="adjAMPM('e','m',-1)">▼</button>
+          </div>
+          <div class="ampm-col">
+            <button class="ampm-btn" id="e-am" onclick="setAMPM('e','AM')">AM</button>
+            <button class="ampm-btn active" id="e-pm" onclick="setAMPM('e','PM')">PM</button>
           </div>
         </div>
       </div>
@@ -224,53 +247,76 @@ let currentUser=null, jobs=[], entries=[], sheet=null;
 let payRules={ot_threshold:8,dt_threshold:12};
 let editingId=null, weekDates=[];
 
-// Time state: hours & minutes for start/end
-let T = { sh:8, sm:0, eh:17, em:0 };
-
-const MINS = [0,15,30,45];
+// Time state (12-hr)
+const T = {
+  s: { h:8,  m:0,  ampm:'AM' },
+  e: { h:5,  m:0,  ampm:'PM' }
+};
 
 function pad(n){ return String(n).padStart(2,'0'); }
 
-function getStartVal(){ return `${pad(T.sh)}:${pad(T.sm)}`; }
-function getEndVal(){   return `${pad(T.eh)}:${pad(T.em)}`; }
+// Convert 12hr state to 24hr string
+function to24(side){
+  let h = T[side].h % 12;
+  if(T[side].ampm === 'PM') h += 12;
+  return `${pad(h)}:${pad(T[side].m)}`;
+}
 
-function adj(field, dir) {
-  if(field==='sh'){ T.sh=(T.sh+dir+24)%24; }
-  if(field==='eh'){ T.eh=(T.eh+dir+24)%24; }
-  if(field==='sm'){
-    const i=MINS.indexOf(T.sm);
-    T.sm=MINS[(i+dir+4)%4];
-  }
-  if(field==='em'){
-    const i=MINS.indexOf(T.em);
-    T.em=MINS[(i+dir+4)%4];
-  }
-  document.getElementById('sh-val').textContent=pad(T.sh);
-  document.getElementById('sm-val').textContent=pad(T.sm);
-  document.getElementById('eh-val').textContent=pad(T.eh);
-  document.getElementById('em-val').textContent=pad(T.em);
+// Convert 24hr string to 12hr state
+function from24(side, str){
+  const [h24, m] = str.split(':').map(Number);
+  T[side].ampm = h24 >= 12 ? 'PM' : 'AM';
+  T[side].h = h24 % 12 || 12;
+  T[side].m = m;
+}
+
+function renderPicker(side){
+  document.getElementById(`${side}-h`).value = T[side].h;
+  document.getElementById(`${side}-m`).value = pad(T[side].m);
+  document.getElementById(`${side}-am`).classList.toggle('active', T[side].ampm==='AM');
+  document.getElementById(`${side}-pm`).classList.toggle('active', T[side].ampm==='PM');
+}
+
+function setAMPM(side, val){
+  T[side].ampm = val;
+  renderPicker(side);
   updateCalc();
 }
 
-function setTime(startStr, endStr){
-  const [sh,sm]=startStr.split(':').map(Number);
-  const [eh,em]=endStr.split(':').map(Number);
-  T.sh=sh; T.sm=sm; T.eh=eh; T.em=em;
-  // snap minutes to nearest 15
-  T.sm=MINS.reduce((a,b)=>Math.abs(b-T.sm)<Math.abs(a-T.sm)?b:a);
-  T.em=MINS.reduce((a,b)=>Math.abs(b-T.em)<Math.abs(a-T.em)?b:a);
-  document.getElementById('sh-val').textContent=pad(T.sh);
-  document.getElementById('sm-val').textContent=pad(T.sm);
-  document.getElementById('eh-val').textContent=pad(T.eh);
-  document.getElementById('em-val').textContent=pad(T.em);
+function adjAMPM(side, part, dir){
+  if(part==='h'){
+    T[side].h = (T[side].h - 1 + dir + 12) % 12 + 1; // 1-12
+  } else {
+    T[side].m = (T[side].m + dir * 15 + 60) % 60;
+  }
+  renderPicker(side);
+  updateCalc();
 }
 
-function calcHours(s,e,brk){
+function editVal(side, part, val){
+  const n = parseInt(val);
+  if(isNaN(n)) return;
+  if(part==='h'){
+    T[side].h = Math.max(1, Math.min(12, n));
+  } else {
+    T[side].m = Math.max(0, Math.min(59, n));
+  }
+  renderPicker(side);
+  updateCalc();
+}
+
+function fmtField(side, part){
+  // re-render to clean up formatting
+  if(part==='m') document.getElementById(`${side}-m`).value = pad(T[side].m);
+  else document.getElementById(`${side}-h`).value = T[side].h;
+}
+
+function calcHours(s, e, brk){
   if(!s||!e) return null;
   let [sh,sm]=s.split(':').map(Number);
   let [eh,em]=e.split(':').map(Number);
   let sM=sh*60+sm, eM=eh*60+em;
-  if(eM<=sM) eM+=1440;
+  if(eM<=sM) eM+=1440; // overnight
   let total=Math.max((eM-sM-(brk||0))/60,0);
   const ot=payRules.ot_threshold, dt=payRules.dt_threshold;
   return {
@@ -283,7 +329,7 @@ function calcHours(s,e,brk){
 
 function updateCalc(){
   const brk=parseInt(document.getElementById('f-break').value)||0;
-  const h=calcHours(getStartVal(),getEndVal(),brk);
+  const h=calcHours(to24('s'), to24('e'), brk);
   if(!h) return;
   document.getElementById('c-reg').textContent=h.regular+'h';
   document.getElementById('c-ot').textContent=h.ot+'h';
@@ -299,7 +345,8 @@ function openAdd(){
   document.getElementById('f-break').value='0';
   document.getElementById('f-notes').value='';
   document.getElementById('btn-del').style.display='none';
-  setTime('08:00','17:00');
+  from24('s','08:00'); from24('e','17:00');
+  renderPicker('s'); renderPicker('e');
   updateCalc();
   document.getElementById('overlay').classList.add('open');
   document.getElementById('sheet').classList.add('open');
@@ -315,7 +362,9 @@ function openEditById(id){
   document.getElementById('f-break').value=e.break_minutes||0;
   document.getElementById('f-notes').value=e.notes||'';
   document.getElementById('btn-del').style.display='block';
-  setTime(e.start_time?.slice(0,5)||'08:00', e.end_time?.slice(0,5)||'17:00');
+  from24('s', e.start_time?.slice(0,5)||'08:00');
+  from24('e', e.end_time?.slice(0,5)||'17:00');
+  renderPicker('s'); renderPicker('e');
   updateCalc();
   document.getElementById('overlay').classList.add('open');
   document.getElementById('sheet').classList.add('open');
@@ -326,13 +375,22 @@ function closeSheet(){
   document.getElementById('sheet').classList.remove('open');
 }
 
+// Format 24hr time to 12hr display string
+function fmt24to12(str){
+  if(!str) return '—';
+  const [h,m]=str.split(':').map(Number);
+  const ampm=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  return `${h12}:${pad(m)} ${ampm}`;
+}
+
 async function saveEntry(){
   const date=document.getElementById('f-date').value;
   const jobId=parseInt(document.getElementById('f-job').value);
   const brk=parseInt(document.getElementById('f-break').value)||0;
   const notes=document.getElementById('f-notes').value;
   if(!date||!jobId){alert('Please select a date and job.');return;}
-  const s=getStartVal(), e=getEndVal();
+  const s=to24('s'), e=to24('e');
   const h=calcHours(s,e,brk);
   const payload={
     employee_id:currentUser.id, job_id:jobId, entry_date:date,
@@ -385,7 +443,7 @@ function renderEntries(){
       const ds=new Date(e.entry_date+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
       return `<div class="entry-card${isLocked?' locked':''}" ${canEdit?`onclick="openEditById(${e.entry_id})"`:''}>
         <div class="entry-top"><div class="entry-job">${job?.job_name||'—'}</div><div class="entry-date">${ds}</div></div>
-        <div class="entry-time">${e.start_time?.slice(0,5)} → ${e.end_time?.slice(0,5)}${e.break_minutes>0?` · ${e.break_minutes}min break`:''}</div>
+        <div class="entry-time">${fmt24to12(e.start_time?.slice(0,5))} → ${fmt24to12(e.end_time?.slice(0,5))}${e.break_minutes>0?` · ${e.break_minutes}min break`:''}</div>
         <div class="entry-pills">
           ${h?.regular>0?`<span class="pill pill-reg">${h.regular}h reg</span>`:''}
           ${h?.ot>0?`<span class="pill pill-ot">${h.ot}h OT</span>`:''}
