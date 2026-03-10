@@ -111,7 +111,7 @@
       <button class="btn-login" id="btn-login" onclick="doLogin()">SIGN IN</button>
       <div class="login-error" id="login-error"></div>
       <div style="text-align:center;margin-top:14px;">
-        <a href="#" onclick="forgotPassword()" style="font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:1px;">Forgot password?</a>
+        <a href="#" onclick="forgotPassword();return false;" style="font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:1px;">Forgot password?</a>
       </div>
     </div>
   </div>
@@ -206,8 +206,6 @@
       console.log('perms:', JSON.stringify(perms), 'err:', permErr);
 
       const roles = perms?.map(p => p.permissions?.permission_name).filter(Boolean) || [];
-      console.log('roles:', roles);
-      document.getElementById('hub-role').textContent = roles.length ? roles.join(', ') : 'employee';
 
       // Also do a direct owner check as fallback
       const { data: ownerCheck } = await sb
