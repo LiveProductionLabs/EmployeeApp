@@ -178,14 +178,12 @@ async function sendInvite() {
 
 
 async function loadTeam() {
-  const { data: employees } = await sb
+  const { data: employees, error: empErr } = await sb
     .from('employees')
-    .select(`
-      employee_id, first_name, last_name, email,
-      job_title, is_active, base_hourly_rate,
-      employee_permissions(permissions(permission_name))
-    `)
+    .select('employee_id, first_name, last_name, email, job_title, is_active, base_hourly_rate')
     .order('first_name');
+
+  console.log('employees:', employees, 'err:', empErr);
 
   const list = document.getElementById('team-list');
   if (!employees || employees.length === 0) {
@@ -193,8 +191,14 @@ async function loadTeam() {
     return;
   }
 
+  // Get all permissions separately
+  const { data: allPerms } = await sb
+    .from('employee_permissions')
+    .select('employee_id, permissions(permission_name)');
+
   list.innerHTML = employees.map(e => {
-    const roles = e.employee_permissions?.map(p => p.permissions?.permission_name).filter(Boolean) || ['employee'];
+    const empPerms = allPerms?.filter(p => p.employee_id === e.employee_id) || [];
+    const roles = empPerms.map(p => p.permissions?.permission_name).filter(Boolean) || ['employee'];
     const initials = `${e.first_name?.[0]||''}${e.last_name?.[0]||''}`.toUpperCase() || '?';
     const name = e.first_name ? `${e.first_name} ${e.last_name}` : e.email;
     const isPending = !e.first_name;
