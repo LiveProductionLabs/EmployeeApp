@@ -199,12 +199,14 @@ async function loadWeek() {
   const [sr,er,expr] = await Promise.all([
     sb.from('time_sheets').select('*').eq('week_start_date',ws),
     sb.from('time_entries').select('*').gte('entry_date',ws).lte('entry_date',we),
-    sb.from('expenses').select('*, expense_attachments(*), employees(first_name,last_name), jobs(job_name)')
+    sb.from('expenses').select('*, expense_attachments(*)')
       .gte('expense_date',ws).lte('expense_date',we).order('expense_date',{ascending:false}),
   ]);
   allSheets   = sr.data   || [];
   allEntries  = er.data   || [];
   allExpenses = expr.data || [];
+  console.log('EXPENSES QUERY:', expr);
+  console.log('EXPENSES DATA:', allExpenses);
   renderHours();
   renderExpenses();
 }
@@ -287,10 +289,13 @@ async function lockAll() {
 // ── EXPENSES ──────────────────────────────────────────────
 async function renderExpenses() {
   const el=document.getElementById('expenses-list');
+  console.log('renderExpenses called, count:', allExpenses.length);
   if(!allExpenses.length){el.innerHTML='<div class="empty-state">No expenses this week.</div>';return;}
 
   const cards=await Promise.all(allExpenses.map(async exp=>{
-    const emp=exp.employees;
+    // look up from already-loaded arrays instead of relying on join
+    const emp=allEmployees.find(e=>e.employee_id===exp.employee_id);
+    const job=allJobs.find(j=>j.job_id===exp.job_id);
     const name=emp?`${emp.first_name} ${emp.last_name}`:'Unknown';
     const bcls={submitted:'badge-submitted',approved:'badge-approved',rejected:'badge-rejected'}[exp.status]||'badge-submitted';
 
@@ -317,7 +322,7 @@ async function renderExpenses() {
         <div class="exp-amount">$${parseFloat(exp.amount).toFixed(2)}</div>
         <div class="exp-info">
           <div class="exp-name">${name} · ${exp.category}</div>
-          <div class="exp-sub">${exp.expense_date}${exp.jobs?' · '+exp.jobs.job_name:''}</div>
+          <div class="exp-sub">${exp.expense_date}${job?' · '+job.job_name:''}</div>
         </div>
         <span class="badge ${bcls}">${exp.status}</span>
       </div>
@@ -393,11 +398,12 @@ async function exportExpenses() {
   const wb=XLSX.utils.book_new();
   const hdr=['Employee','Date','Category','Job','Amount','Status','Description','Receipts'];
   const rows=allExpenses.map(exp=>{
-    const emp=exp.employees;
+    const emp=allEmployees.find(e=>e.employee_id===exp.employee_id);
+    const job=allJobs.find(j=>j.job_id===exp.job_id);
     const name=emp?`${emp.first_name} ${emp.last_name}`:'Unknown';
     const attachNames=(exp.expense_attachments||[]).map(a=>a.file_name).join(', ');
     return[name, exp.expense_date, exp.category,
-      exp.jobs?exp.jobs.job_name:'',
+      job?job.job_name:'',
       +parseFloat(exp.amount).toFixed(2),
       exp.status, exp.description||'', attachNames];
   });
