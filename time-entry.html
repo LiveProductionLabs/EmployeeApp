@@ -116,6 +116,9 @@
     .calc-item:last-child { border-right: none; }
     .calc-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; }
     .calc-lbl { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+    .calc-edit { background: none; border: none; outline: none; width: 100%; text-align: center; cursor: pointer; border-radius: 6px; padding: 2px; transition: background 0.15s; }
+    .calc-edit:focus { background: #38bdf811; border: 1px solid var(--accent); }
+    .calc-edit.overridden { text-decoration: underline dotted; }
 
     .sheet-actions { display: flex; gap: 10px; margin-top: 8px; }
     .btn-save { flex: 1; background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; color: #fff; padding: 14px; border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; cursor: pointer; }
@@ -216,14 +219,29 @@
 
   <div class="form-field">
     <label class="form-label">Break (minutes)</label>
-    <input class="form-input" type="number" id="f-break" min="0" value="0" oninput="updateCalc()" />
+    <input class="form-input" type="number" id="f-break" min="0" placeholder="0" onfocus="if(this.value==='0')this.value=''" onblur="if(this.value==='')this.value='0'" oninput="updateCalc()" />
   </div>
 
   <div class="calc-row">
-    <div class="calc-item"><div class="calc-num num-reg" id="c-reg">—</div><div class="calc-lbl">Reg</div></div>
-    <div class="calc-item"><div class="calc-num num-ot" id="c-ot">—</div><div class="calc-lbl">OT</div></div>
-    <div class="calc-item"><div class="calc-num num-dt" id="c-dt">—</div><div class="calc-lbl">DT</div></div>
-    <div class="calc-item"><div class="calc-num num-total" id="c-total">—</div><div class="calc-lbl">Total</div></div>
+    <div class="calc-item">
+      <input class="calc-num num-reg calc-edit" id="c-reg" type="text" inputmode="decimal" placeholder="—" oninput="overrideCalc('reg',this.value)" onfocus="markOverride('reg')" />
+      <div class="calc-lbl">Reg</div>
+    </div>
+    <div class="calc-item">
+      <input class="calc-num num-ot calc-edit" id="c-ot" type="text" inputmode="decimal" placeholder="—" oninput="overrideCalc('ot',this.value)" onfocus="markOverride('ot')" />
+      <div class="calc-lbl">OT</div>
+    </div>
+    <div class="calc-item">
+      <input class="calc-num num-dt calc-edit" id="c-dt" type="text" inputmode="decimal" placeholder="—" oninput="overrideCalc('dt',this.value)" onfocus="markOverride('dt')" />
+      <div class="calc-lbl">DT</div>
+    </div>
+    <div class="calc-item">
+      <input class="calc-num num-total calc-edit" id="c-total" type="text" inputmode="decimal" placeholder="—" oninput="overrideCalc('total',this.value)" onfocus="markOverride('total')" />
+      <div class="calc-lbl">Total</div>
+    </div>
+  </div>
+  <div id="override-warn" style="display:none; font-size:11px; color:var(--warning); margin-bottom:12px; padding: 8px 12px; background:#3d2a0066; border:1px solid #854d0e; border-radius:8px;">
+    ⚠️ Hours manually edited — times ignored for this field. <button onclick="clearOverrides()" style="background:none;border:none;color:var(--accent);font-family:'DM Mono',monospace;font-size:11px;cursor:pointer;text-decoration:underline;">Reset to calculated</button>
   </div>
 
   <div class="form-field">
@@ -311,6 +329,30 @@ function fmtField(side, part){
   else document.getElementById(`${side}-h`).value = T[side].h;
 }
 
+// Override state — null means use calculated value
+let overrides = { reg: null, ot: null, dt: null, total: null };
+
+function markOverride(field) {
+  // just focuses — actual override set on input
+}
+
+function overrideCalc(field, val) {
+  const n = parseFloat(val);
+  overrides[field] = isNaN(n) ? null : n;
+  const anyOverride = Object.values(overrides).some(v => v !== null);
+  document.getElementById('override-warn').style.display = anyOverride ? 'block' : 'none';
+  document.getElementById(`c-${field}`).classList.toggle('overridden', overrides[field] !== null);
+}
+
+function clearOverrides() {
+  overrides = { reg: null, ot: null, dt: null, total: null };
+  ['reg','ot','dt','total'].forEach(f => {
+    document.getElementById(`c-${f}`).classList.remove('overridden');
+  });
+  document.getElementById('override-warn').style.display = 'none';
+  updateCalc();
+}
+
 function calcHours(s, e, brk){
   if(!s||!e) return null;
   let [sh,sm]=s.split(':').map(Number);
@@ -331,10 +373,10 @@ function updateCalc(){
   const brk=parseInt(document.getElementById('f-break').value)||0;
   const h=calcHours(to24('s'), to24('e'), brk);
   if(!h) return;
-  document.getElementById('c-reg').textContent=h.regular+'h';
-  document.getElementById('c-ot').textContent=h.ot+'h';
-  document.getElementById('c-dt').textContent=h.dt+'h';
-  document.getElementById('c-total').textContent=h.total+'h';
+  if(overrides.reg === null)   { document.getElementById('c-reg').value   = h.regular+'h'; }
+  if(overrides.ot === null)    { document.getElementById('c-ot').value    = h.ot+'h'; }
+  if(overrides.dt === null)    { document.getElementById('c-dt').value    = h.dt+'h'; }
+  if(overrides.total === null) { document.getElementById('c-total').value = h.total+'h'; }
 }
 
 function openAdd(){
@@ -345,6 +387,9 @@ function openAdd(){
   document.getElementById('f-break').value='0';
   document.getElementById('f-notes').value='';
   document.getElementById('btn-del').style.display='none';
+  overrides = { reg: null, ot: null, dt: null, total: null };
+  document.getElementById('override-warn').style.display='none';
+  ['reg','ot','dt','total'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
   from24('s','08:00'); from24('e','17:00');
   renderPicker('s'); renderPicker('e');
   updateCalc();
@@ -362,6 +407,9 @@ function openEditById(id){
   document.getElementById('f-break').value=e.break_minutes||0;
   document.getElementById('f-notes').value=e.notes||'';
   document.getElementById('btn-del').style.display='block';
+  overrides = { reg: null, ot: null, dt: null, total: null };
+  document.getElementById('override-warn').style.display='none';
+  ['reg','ot','dt','total'].forEach(f=>document.getElementById(`c-${f}`).classList.remove('overridden'));
   from24('s', e.start_time?.slice(0,5)||'08:00');
   from24('e', e.end_time?.slice(0,5)||'17:00');
   renderPicker('s'); renderPicker('e');
@@ -392,11 +440,17 @@ async function saveEntry(){
   if(!date||!jobId){alert('Please select a date and job.');return;}
   const s=to24('s'), e=to24('e');
   const h=calcHours(s,e,brk);
+  const finalH = {
+    regular: overrides.reg   ?? h.regular,
+    ot:      overrides.ot    ?? h.ot,
+    dt:      overrides.dt    ?? h.dt,
+    total:   overrides.total ?? h.total
+  };
   const payload={
     employee_id:currentUser.id, job_id:jobId, entry_date:date,
     start_time:s, end_time:e, break_minutes:brk,
     is_overnight:e<=s,
-    total_hours:h.total, regular_hours:h.regular, ot_hours:h.ot, dt_hours:h.dt,
+    total_hours:finalH.total, regular_hours:finalH.regular, ot_hours:finalH.ot, dt_hours:finalH.dt,
     notes:notes||null
   };
   if(editingId){ await sb.from('time_entries').update(payload).eq('entry_id',editingId); }
