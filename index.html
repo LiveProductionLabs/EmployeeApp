@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -111,6 +110,9 @@
       </div>
       <button class="btn-login" id="btn-login" onclick="doLogin()">SIGN IN</button>
       <div class="login-error" id="login-error"></div>
+      <div style="text-align:center;margin-top:14px;">
+        <a href="#" onclick="forgotPassword()" style="font-size:11px;color:var(--muted);text-decoration:none;letter-spacing:1px;">Forgot password?</a>
+      </div>
     </div>
   </div>
 
@@ -134,13 +136,11 @@
           <div class="card-icon">⏱</div>
           <div class="card-title">Time Entry</div>
           <div class="card-desc">Log your hours, pick a job, and submit your weekly timesheet.</div>
-          <span class="card-badge badge-active">● Active</span>
         </a>
         <a class="hub-card" href="jobs.html" id="card-jobs" style="display:none;text-decoration:none;color:inherit;">
           <div class="card-icon">📋</div>
           <div class="card-title">Jobs</div>
           <div class="card-desc">Manage jobs, assign crew, track clients and venues.</div>
-          <span class="card-badge badge-active">● Active</span>
         </a>
         <a class="hub-card" id="card-expenses" href="expenses.html">
           <div class="card-icon">💸</div>
@@ -162,14 +162,7 @@
           <div class="card-icon">📊</div>
           <div class="card-title">Timesheets</div>
           <div class="card-desc">Review submitted hours, lock approvals, export & email to accounting.</div>
-          <span class="card-badge badge-active">● Active</span>
         </a>
-      </div>
-      <div class="hub-status">
-        <div class="status-title">Account Info</div>
-        <div class="status-row"><span class="status-label">Connection</span><span class="status-val"><span class="dot dot-green"></span>Supabase Connected</span></div>
-        <div class="status-row"><span class="status-label">Role</span><span class="status-val" id="hub-role">—</span></div>
-        <div class="status-row"><span class="status-label">Account Status</span><span class="status-val"><span class="dot dot-green"></span>Active</span></div>
       </div>
     </div>
   </div>
@@ -265,6 +258,16 @@
       }
 
       await loadHub(data.user);
+    }
+
+    async function forgotPassword() {
+      const email = document.getElementById('login-email').value.trim();
+      if (!email) { alert('Enter your email address first, then click Forgot password.'); return; }
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: 'https://liveproductionlabs.github.io/EmployeeApp/index.html'
+      });
+      if (error) alert('Error: ' + error.message);
+      else alert('Reset email sent to ' + email + ' — check your inbox!');
     }
 
     async function doLogout() {
