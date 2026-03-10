@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Timesheets — Live Production Labs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="data:image/png;base64,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" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1e2a3a; --surface: #263447; --surface2: #2f3f55;
+      --border: #3a5068; --accent: #38bdf8; --accent2: #818cf8;
+      --text: #f0f4f8; --text2: #94a3b8;
+      --success: #4ade80; --warning: #fbbf24; --danger: #f87171;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
+    #loading { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
+    .topnav { background: #182230; border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; height: 56px; gap: 12px; position: sticky; top: 0; z-index: 50; }
+    .nav-back { background: none; border: 1px solid var(--border); color: var(--text2); font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .nav-back:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-bar { width: 5px; height: 32px; background: linear-gradient(180deg,var(--accent),var(--accent2)); border-radius: 3px; }
+    .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; }
+    .main { padding: 20px; max-width: 700px; margin: 0 auto; }
+
+    .week-nav { display: flex; align-items: center; justify-content: space-between; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; }
+    .week-btn { background: none; border: 1px solid var(--border); color: var(--text2); font-size: 18px; width: 36px; height: 36px; border-radius: 8px; cursor: pointer; }
+    .week-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .week-label { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; }
+
+    .action-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+    .btn-lock-all { flex: 1; background: linear-gradient(135deg, var(--success), #16a34a); border: none; border-radius: 10px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; padding: 14px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-export   { flex: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 10px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; padding: 14px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-lock-all:hover, .btn-export:hover { opacity: 0.88; }
+
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; color: var(--accent); margin-bottom: 12px; }
+    .sheet-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+    .sheet-header { display: flex; align-items: center; padding: 14px 16px; cursor: pointer; gap: 12px; transition: background 0.15s; }
+    .sheet-header:hover { background: var(--surface2); }
+    .emp-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,var(--accent),var(--accent2)); display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: #fff; flex-shrink: 0; }
+    .emp-name  { flex: 1; font-size: 14px; }
+    .emp-total { font-size: 12px; color: var(--text2); margin-right: 8px; }
+    .badge { font-size: 10px; padding: 3px 10px; border-radius: 99px; }
+    .badge-open      { background: #1a2a3a; color: var(--text2); }
+    .badge-submitted { background: #3d2a00; color: var(--warning); }
+    .badge-locked    { background: #0f2918; color: var(--success); }
+    .badge-none      { background: #111820; color: #4a5568; }
+
+    .sheet-detail { display: none; border-top: 1px solid var(--border); padding: 14px 16px; }
+    .sheet-detail.open { display: block; }
+    .entry-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .entry-table th { color: var(--text2); font-size: 10px; text-transform: uppercase; letter-spacing: 1px; padding: 4px 6px 8px; text-align: left; font-weight: normal; }
+    .entry-table td { padding: 7px 6px; border-top: 1px solid var(--border); }
+
+    .totals-strip { display: flex; gap: 20px; padding: 12px 0 6px; border-top: 1px solid var(--border); margin-top: 4px; }
+    .tot-item { display: flex; flex-direction: column; gap: 2px; }
+    .tot-label { font-size: 10px; color: var(--text2); }
+    .tot-val   { font-size: 15px; color: var(--accent); font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+
+    .card-actions { display: flex; gap: 8px; padding-top: 10px; }
+    .btn-lock-one   { background: transparent; border: 1px solid var(--success); border-radius: 8px; color: var(--success); font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 1px; padding: 8px 16px; cursor: pointer; }
+    .btn-unlock-one { background: transparent; border: 1px solid var(--warning); border-radius: 8px; color: var(--warning); font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 1px; padding: 8px 16px; cursor: pointer; }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 12px; }
+  </style>
+</head>
+<body>
+<div id="loading">LOADING...</div>
+
+<nav class="topnav">
+  <a class="nav-back" href="index.html">← Hub</a>
+  <div class="nav-bar"></div>
+  <div class="nav-title">Timesheets</div>
+</nav>
+
+<div class="main">
+
+  <div class="week-nav">
+    <button class="week-btn" onclick="changeWeek(-1)">&#8249;</button>
+    <div class="week-label" id="week-label">—</div>
+    <button class="week-btn" onclick="changeWeek(1)">&#8250;</button>
+  </div>
+
+  <div class="action-bar">
+    <button class="btn-lock-all" onclick="lockAll()">🔒 Lock All</button>
+    <button class="btn-export"   onclick="exportExcel()">⬇ Export Excel</button>
+  </div>
+
+  <div class="section-title">Team Hours</div>
+  <div id="sheets-list"><div class="empty-state">Loading...</div></div>
+
+</div>
+
+<script>
+const SUPABASE_URL  = 'https://xfpgbjxavymtfmfobecc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let currentUser  = null;
+let weekStart    = getMonday(new Date());
+let allEmployees = [], allSheets = [], allEntries = [], allJobs = [];
+
+function getMonday(d) {
+  const dt = new Date(d), day = dt.getDay();
+  dt.setDate(dt.getDate() - day + (day===0?-6:1));
+  dt.setHours(0,0,0,0); return dt;
+}
+function toISO(d)    { return d.toISOString().split('T')[0]; }
+function fmtDate(s)  { return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function fmtFull(s)  { return new Date(s+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function fmtTime(t)  { if(!t) return '—'; const [h,m]=t.split(':').map(Number); return `${h%12||12}:${String(m).padStart(2,'0')} ${h>=12?'PM':'AM'}`; }
+
+function changeWeek(dir) { weekStart.setDate(weekStart.getDate()+dir*7); loadWeek(); }
+
+function updateLabel() {
+  const end = new Date(weekStart); end.setDate(end.getDate()+6);
+  document.getElementById('week-label').textContent =
+    weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'}) + ' – ' +
+    end.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+
+async function loadWeek() {
+  updateLabel();
+  const ws = toISO(weekStart), we = toISO(new Date(weekStart.getTime()+6*864e5));
+  const [sr, er] = await Promise.all([
+    sb.from('time_sheets').select('*').eq('week_start_date', ws),
+    sb.from('time_entries').select('*').gte('entry_date', ws).lte('entry_date', we),
+  ]);
+  allSheets  = sr.data || [];
+  allEntries = er.data || [];
+  renderSheets();
+}
+
+function renderSheets() {
+  const el = document.getElementById('sheets-list');
+  if (!allEmployees.length) { el.innerHTML = '<div class="empty-state">No employees found.</div>'; return; }
+
+  el.innerHTML = allEmployees.map(emp => {
+    const sheet   = allSheets.find(s => s.employee_id === emp.employee_id);
+    const entries = allEntries.filter(e => e.employee_id === emp.employee_id);
+    const status  = sheet ? sheet.status : (entries.length ? 'open' : 'none');
+    const reg  = entries.reduce((a,e)=>a+(+e.regular_hours||0),0);
+    const ot   = entries.reduce((a,e)=>a+(+e.ot_hours||0),0);
+    const dt   = entries.reduce((a,e)=>a+(+e.dt_hours||0),0);
+    const tot  = entries.reduce((a,e)=>a+(+e.total_hours||0),0);
+    const init = ((emp.first_name?.[0]||'')+(emp.last_name?.[0]||'')).toUpperCase();
+    const name = `${emp.first_name} ${emp.last_name}`;
+    const bcls = {open:'badge-open',submitted:'badge-submitted',locked:'badge-locked',none:'badge-none'}[status];
+    const btxt = {open:'Open',submitted:'Submitted',locked:'Locked',none:'No Entries'}[status];
+
+    const rows = entries.length
+      ? `<table class="entry-table">
+          <thead><tr><th>Date</th><th>Job</th><th>In</th><th>Out</th><th>Reg</th><th>OT</th><th>DT</th></tr></thead>
+          <tbody>${entries.map(e=>{
+            const job=allJobs.find(j=>j.job_id===e.job_id);
+            return `<tr>
+              <td>${fmtDate(e.entry_date)}</td>
+              <td style="max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${job?job.job_name:'—'}</td>
+              <td>${fmtTime(e.start_time)}</td><td>${fmtTime(e.end_time)}</td>
+              <td>${(+e.regular_hours||0).toFixed(1)}</td>
+              <td>${(+e.ot_hours||0)>0?(+e.ot_hours).toFixed(1):'—'}</td>
+              <td>${(+e.dt_hours||0)>0?(+e.dt_hours).toFixed(1):'—'}</td>
+            </tr>`;}).join('')}</tbody></table>
+          <div class="totals-strip">
+            <div class="tot-item"><div class="tot-label">Regular</div><div class="tot-val">${reg.toFixed(2)}h</div></div>
+            <div class="tot-item"><div class="tot-label">OT</div><div class="tot-val">${ot.toFixed(2)}h</div></div>
+            <div class="tot-item"><div class="tot-label">DT</div><div class="tot-val">${dt.toFixed(2)}h</div></div>
+            <div class="tot-item"><div class="tot-label">Total</div><div class="tot-val">${tot.toFixed(2)}h</div></div>
+          </div>`
+      : '<div style="padding:8px 0;font-size:12px;color:var(--text2)">No entries this week.</div>';
+
+    const lockBtn = entries.length
+      ? (status!=='locked'
+          ? `<button class="btn-lock-one"   onclick="lockOne('${emp.employee_id}',event)">🔒 Lock</button>`
+          : `<button class="btn-unlock-one" onclick="unlockOne('${emp.employee_id}',event)">🔓 Unlock</button>`)
+      : '';
+
+    return `<div class="sheet-card">
+      <div class="sheet-header" onclick="toggleDetail('${emp.employee_id}')">
+        <div class="emp-avatar">${init}</div>
+        <div class="emp-name">${name}</div>
+        <div class="emp-total">${tot>0?tot.toFixed(1)+'h':''}</div>
+        <span class="badge ${bcls}">${btxt}</span>
+      </div>
+      <div class="sheet-detail" id="detail-${emp.employee_id}">
+        ${rows}
+        <div class="card-actions">${lockBtn}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleDetail(id) { document.getElementById(`detail-${id}`).classList.toggle('open'); }
+
+async function lockOne(empId, e) {
+  e.stopPropagation();
+  const ws=toISO(weekStart), we=toISO(new Date(weekStart.getTime()+6*864e5));
+  const sheet=allSheets.find(s=>s.employee_id===empId);
+  if (sheet) await sb.from('time_sheets').update({status:'locked',locked_at:new Date().toISOString(),locked_by:currentUser.id}).eq('sheet_id',sheet.sheet_id);
+  else       await sb.from('time_sheets').insert({employee_id:empId,week_start_date:ws,week_end_date:we,status:'locked',locked_at:new Date().toISOString(),locked_by:currentUser.id});
+  await loadWeek();
+}
+
+async function unlockOne(empId, e) {
+  e.stopPropagation();
+  const sheet=allSheets.find(s=>s.employee_id===empId);
+  if (!sheet) return;
+  await sb.from('time_sheets').update({status:'submitted',locked_at:null,locked_by:null}).eq('sheet_id',sheet.sheet_id);
+  await loadWeek();
+}
+
+async function lockAll() {
+  const ws=toISO(weekStart), we=toISO(new Date(weekStart.getTime()+6*864e5));
+  const active=allEmployees.filter(emp=>allEntries.some(e=>e.employee_id===emp.employee_id));
+  for (const emp of active) {
+    const sheet=allSheets.find(s=>s.employee_id===emp.employee_id);
+    if (sheet) await sb.from('time_sheets').update({status:'locked',locked_at:new Date().toISOString(),locked_by:currentUser.id}).eq('sheet_id',sheet.sheet_id);
+    else       await sb.from('time_sheets').insert({employee_id:emp.employee_id,week_start_date:ws,week_end_date:we,status:'locked',locked_at:new Date().toISOString(),locked_by:currentUser.id});
+  }
+  await loadWeek();
+}
+
+function exportExcel() {
+  const ws=toISO(weekStart), we=toISO(new Date(weekStart.getTime()+6*864e5));
+  const weekLbl=`${fmtFull(ws)} - ${fmtFull(we)}`;
+  const wb=XLSX.utils.book_new();
+
+  // SUMMARY
+  const sHdr=['Employee','Status','Reg Hrs','OT Hrs','DT Hrs','Total Hrs','Base Rate','OT Rate','DT Rate','Reg Pay','OT Pay','DT Pay','Total Pay'];
+  const sRows=allEmployees.map(emp=>{
+    const sheet=allSheets.find(s=>s.employee_id===emp.employee_id);
+    const ents=allEntries.filter(e=>e.employee_id===emp.employee_id);
+    const reg=ents.reduce((a,e)=>a+(+e.regular_hours||0),0);
+    const ot=ents.reduce((a,e)=>a+(+e.ot_hours||0),0);
+    const dt=ents.reduce((a,e)=>a+(+e.dt_hours||0),0);
+    const base=+emp.base_hourly_rate||0, otR=+emp.ot_rate||0, dtR=+emp.dt_rate||0;
+    const rp=+(reg*base).toFixed(2), op=+(ot*otR).toFixed(2), dp=+(dt*dtR).toFixed(2);
+    return [`${emp.first_name} ${emp.last_name}`, sheet?sheet.status:'no entries',
+      +reg.toFixed(2),+ot.toFixed(2),+dt.toFixed(2),+(reg+ot+dt).toFixed(2),
+      base,otR,dtR,rp,op,dp,+(rp+op+dp).toFixed(2)];
+  });
+  const sumWS=XLSX.utils.aoa_to_sheet([[`Week: ${weekLbl}`],[],sHdr,...sRows]);
+  sumWS['!cols']=[22,12,9,9,9,10,10,9,9,10,10,10,11].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,sumWS,'Summary');
+
+  // DETAIL
+  const dHdr=['Employee','Date','Job','Start','End','Break (min)','Reg Hrs','OT Hrs','DT Hrs','Total Hrs','Status','Notes'];
+  const dRows=[];
+  allEmployees.forEach(emp=>{
+    const sheet=allSheets.find(s=>s.employee_id===emp.employee_id);
+    allEntries.filter(e=>e.employee_id===emp.employee_id).forEach(e=>{
+      const job=allJobs.find(j=>j.job_id===e.job_id);
+      dRows.push([`${emp.first_name} ${emp.last_name}`,e.entry_date,job?job.job_name:'',
+        e.start_time||'',e.end_time||'',e.break_minutes||0,
+        +(+e.regular_hours||0).toFixed(2),+(+e.ot_hours||0).toFixed(2),
+        +(+e.dt_hours||0).toFixed(2),+(+e.total_hours||0).toFixed(2),
+        sheet?sheet.status:'open',e.notes||'']);
+    });
+  });
+  const detWS=XLSX.utils.aoa_to_sheet([[`Week: ${weekLbl}`],[],dHdr,...dRows]);
+  detWS['!cols']=[22,12,24,10,10,12,9,9,9,10,10,30].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,detWS,'Detail');
+
+  XLSX.writeFile(wb,`LPL_Timesheet_${ws}.xlsx`);
+}
+
+async function init() {
+  const {data:{session}}=await sb.auth.getSession();
+  if (!session){window.location.href='index.html';return;}
+  currentUser=session.user;
+
+  const {data:perms}=await sb.from('employee_permissions').select('permissions(permission_name)').eq('employee_id',currentUser.id);
+  if (!perms?.some(p=>p.permissions?.permission_name==='owner')){window.location.href='index.html';return;}
+
+  const [er,jr]=await Promise.all([
+    sb.from('employees').select('employee_id,first_name,last_name,base_hourly_rate,ot_rate,dt_rate').eq('is_active',true).order('first_name'),
+    sb.from('jobs').select('job_id,job_name'),
+  ]);
+  allEmployees=er.data||[];
+  allJobs=jr.data||[];
+
+  await loadWeek();
+  document.getElementById('loading').style.display='none';
+}
+init();
+</script>
+</body>
+</html>
