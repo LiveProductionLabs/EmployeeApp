@@ -66,7 +66,7 @@
     .hub-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg,var(--accent),var(--purple)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
     .hub-card:hover { border-color: var(--accent); transform: translateY(-2px); }
     .hub-card:hover::before { transform: scaleX(1); }
-    .hub-card.disabled { cursor: default; opacity: 0.5; pointer-events: none; }
+    .hub-card.disabled { cursor: default; opacity: 0.5; }
     .card-icon { font-size: 28px; margin-bottom: 12px; }
     .card-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; margin-bottom: 6px; }
     .card-desc { font-size: 11px; color: var(--muted); line-height: 1.6; }
@@ -147,7 +147,7 @@
           <div class="card-desc">Submit receipts and track reimbursable expenses per job.</div>
           <span class="card-badge badge-soon">Coming Soon</span>
         </div>
-        <div class="hub-card disabled" id="card-team" onclick="if(this.classList.contains('owner-card'))window.location.href='team.html'">
+        <div class="hub-card disabled" id="card-team">
           <div class="card-icon">👥</div>
           <div class="card-title">Team</div>
           <div class="card-desc">Add employees, manage permissions, and set pay rates.</div>
@@ -199,13 +199,14 @@
         .select('permissions(permission_name)')
         .eq('employee_id', user.id);
 
-      const roles = perms?.map(p => p.permissions.permission_name) || ['employee'];
+      const roles = perms?.map(p => p.permissions?.permission_name).filter(Boolean) || [];
       document.getElementById('hub-role').textContent = roles.join(', ');
       if (roles.includes('owner')) {
         const card = document.getElementById('card-team');
         card.classList.remove('disabled');
-        card.classList.add('owner-card');
         card.style.cursor = 'pointer';
+        card.style.opacity = '1';
+        card.addEventListener('click', () => window.location.href = 'team.html');
         document.getElementById('team-badge').textContent = 'Owner Only';
         document.getElementById('team-badge').style.background = '#2e1a5e';
         document.getElementById('team-badge').style.color = '#818cf8';
