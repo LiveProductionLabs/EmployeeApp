@@ -135,6 +135,12 @@
           <div class="card-desc">Log your hours, pick a job, and submit your weekly timesheet.</div>
           <span class="card-badge badge-active">● Active</span>
         </a>
+        <a class="hub-card" href="jobs.html" id="card-jobs" style="display:none;text-decoration:none;color:inherit;">
+          <div class="card-icon">📋</div>
+          <div class="card-title">Jobs</div>
+          <div class="card-desc">Manage jobs, assign crew, track clients and venues.</div>
+          <span class="card-badge badge-active">● Active</span>
+        </a>
         <div class="hub-card disabled" id="card-expenses">
           <div class="card-icon">💸</div>
           <div class="card-title">Expenses</div>
@@ -219,6 +225,8 @@
         card.onclick = () => window.location.href = 'team.html';
         document.getElementById('team-badge').style.background = '#2e1a5e';
         document.getElementById('team-badge').style.color = '#818cf8';
+
+        document.getElementById('card-jobs').style.display = 'block';
       }
 
       showPage('page-hub');
