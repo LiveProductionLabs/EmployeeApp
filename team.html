@@ -63,6 +63,20 @@
     .badge-pending { background: #3d2a00; color: var(--warning); font-size: 10px; padding: 3px 10px; border-radius: 99px; }
     .inactive-dim { opacity: 0.45; }
     .empty-state { text-align: center; padding: 32px 20px; color: var(--text2); font-size: 12px; }
+    .team-card { cursor: pointer; transition: border-color 0.2s; }
+    .team-card:hover { border-color: var(--accent); }
+
+    /* EDIT MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
+    .modal-section { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; border-top: 1px solid var(--border); padding-top: 12px; }
+    .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-save { width: 100%; background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; border-radius: 10px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 14px; cursor: pointer; margin-top: 16px; }
+    .btn-deactivate { width: 100%; background: transparent; border: 1px solid var(--danger); border-radius: 10px; color: var(--danger); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px; cursor: pointer; margin-top: 8px; }
+    .btn-reactivate { width: 100%; background: transparent; border: 1px solid var(--success); border-radius: 10px; color: var(--success); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px; cursor: pointer; margin-top: 8px; }
+    .btn-cancel { width: 100%; background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--text2); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px; cursor: pointer; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -123,12 +137,60 @@
 
 </div>
 
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="edit-modal">
+  <div class="modal">
+    <div class="modal-title">Edit Employee</div>
+
+    <div class="modal-section">Personal Info</div>
+    <div class="modal-row">
+      <div class="form-field"><label class="form-label">First Name</label><input class="form-input" id="edit-first" /></div>
+      <div class="form-field"><label class="form-label">Last Name</label><input class="form-input" id="edit-last" /></div>
+    </div>
+    <div class="form-field"><label class="form-label">Email</label><input class="form-input" id="edit-email" type="email" /></div>
+    <div class="form-field"><label class="form-label">Phone</label><input class="form-input" id="edit-phone" /></div>
+
+    <div class="modal-section">Emergency Contact</div>
+    <div class="modal-row">
+      <div class="form-field"><label class="form-label">Name</label><input class="form-input" id="edit-ec-name" /></div>
+      <div class="form-field"><label class="form-label">Phone</label><input class="form-input" id="edit-ec-phone" /></div>
+    </div>
+
+    <div class="modal-section">Job & Role</div>
+    <div class="modal-row">
+      <div class="form-field"><label class="form-label">Job Title</label><input class="form-input" id="edit-title" /></div>
+      <div class="form-field">
+        <label class="form-label">Role</label>
+        <select class="form-input" id="edit-role">
+          <option value="employee">Employee</option>
+          <option value="accounting">Accounting</option>
+          <option value="owner">Owner</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-section">Pay Rates</div>
+    <div class="modal-row" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="form-field"><label class="form-label">Base / hr</label><input class="form-input" id="edit-base" type="number" step="0.01" /></div>
+      <div class="form-field"><label class="form-label">OT / hr</label><input class="form-input" id="edit-ot" type="number" step="0.01" /></div>
+      <div class="form-field"><label class="form-label">DT / hr</label><input class="form-input" id="edit-dt" type="number" step="0.01" /></div>
+    </div>
+
+    <div class="msg msg-error" id="edit-error"></div>
+    <div class="msg msg-success" id="edit-success"></div>
+    <button class="btn-save" onclick="saveEmployee()">SAVE CHANGES</button>
+    <button class="btn-deactivate" id="btn-toggle-active" onclick="toggleActive()">DEACTIVATE</button>
+    <button class="btn-cancel" onclick="closeModal()">CANCEL</button>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL  = 'https://xfpgbjxavymtfmfobecc.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let currentUser = null;
+let editingEmployee = null;
 
 async function sendInvite() {
   const email = document.getElementById('inv-email').value.trim();
@@ -180,7 +242,7 @@ async function sendInvite() {
 async function loadTeam() {
   const { data: employees, error: empErr } = await sb
     .from('employees')
-    .select('employee_id, first_name, last_name, email, job_title, is_active, base_hourly_rate')
+    .select('employee_id, first_name, last_name, email, phone, job_title, is_active, base_hourly_rate, ot_rate, dt_rate, emergency_contact_name, emergency_contact_phone')
     .order('first_name');
 
   console.log('employees:', employees, 'err:', empErr);
@@ -206,7 +268,7 @@ async function loadTeam() {
       `<span class="team-role role-${r}">${r}</span>`
     ).join(' ');
 
-    return `<div class="team-card ${e.is_active ? '' : 'inactive-dim'}">
+    return `<div class="team-card ${e.is_active ? '' : 'inactive-dim'}" onclick="openModal(${JSON.stringify(JSON.stringify(e))})">
       <div class="team-avatar">${initials}</div>
       <div class="team-info">
         <div class="team-name">${name} ${!e.is_active ? '<span style="color:var(--text2);font-size:11px;">(inactive)</span>' : ''}</div>
@@ -217,6 +279,93 @@ async function loadTeam() {
       </div>
     </div>`;
   }).join('');
+}
+
+async function openModal(empJson) {
+  const e = JSON.parse(empJson);
+  editingEmployee = e;
+
+  document.getElementById('edit-first').value = e.first_name || '';
+  document.getElementById('edit-last').value = e.last_name || '';
+  document.getElementById('edit-email').value = e.email || '';
+  document.getElementById('edit-phone').value = e.phone || '';
+  document.getElementById('edit-ec-name').value = e.emergency_contact_name || '';
+  document.getElementById('edit-ec-phone').value = e.emergency_contact_phone || '';
+  document.getElementById('edit-title').value = e.job_title || '';
+  document.getElementById('edit-base').value = e.base_hourly_rate || '';
+  document.getElementById('edit-ot').value = e.ot_rate || '';
+  document.getElementById('edit-dt').value = e.dt_rate || '';
+
+  // Load current role
+  const { data: perms } = await sb.from('employee_permissions')
+    .select('permissions(permission_name)').eq('employee_id', e.employee_id);
+  const role = perms?.[0]?.permissions?.permission_name || 'employee';
+  document.getElementById('edit-role').value = role;
+
+  // Toggle button
+  const btn = document.getElementById('btn-toggle-active');
+  if (e.is_active) {
+    btn.textContent = 'DEACTIVATE EMPLOYEE';
+    btn.className = 'btn-deactivate';
+  } else {
+    btn.textContent = 'REACTIVATE EMPLOYEE';
+    btn.className = 'btn-reactivate';
+  }
+
+  document.getElementById('edit-error').style.display = 'none';
+  document.getElementById('edit-success').style.display = 'none';
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+  editingEmployee = null;
+}
+
+async function saveEmployee() {
+  if (!editingEmployee) return;
+  document.getElementById('edit-error').style.display = 'none';
+  document.getElementById('edit-success').style.display = 'none';
+
+  const { error } = await sb.from('employees').update({
+    first_name: document.getElementById('edit-first').value.trim(),
+    last_name: document.getElementById('edit-last').value.trim(),
+    email: document.getElementById('edit-email').value.trim(),
+    phone: document.getElementById('edit-phone').value.trim() || null,
+    emergency_contact_name: document.getElementById('edit-ec-name').value.trim() || null,
+    emergency_contact_phone: document.getElementById('edit-ec-phone').value.trim() || null,
+    job_title: document.getElementById('edit-title').value.trim() || null,
+    base_hourly_rate: parseFloat(document.getElementById('edit-base').value) || null,
+    ot_rate: parseFloat(document.getElementById('edit-ot').value) || null,
+    dt_rate: parseFloat(document.getElementById('edit-dt').value) || null,
+  }).eq('employee_id', editingEmployee.employee_id);
+
+  if (error) {
+    document.getElementById('edit-error').textContent = error.message;
+    document.getElementById('edit-error').style.display = 'block';
+    return;
+  }
+
+  // Update role
+  const newRole = document.getElementById('edit-role').value;
+  const { data: perm } = await sb.from('permissions').select('permission_id').eq('permission_name', newRole).maybeSingle();
+  if (perm) {
+    await sb.from('employee_permissions').delete().eq('employee_id', editingEmployee.employee_id);
+    await sb.from('employee_permissions').insert({ employee_id: editingEmployee.employee_id, permission_id: perm.permission_id, assigned_by: currentUser.id });
+  }
+
+  document.getElementById('edit-success').textContent = 'Saved!';
+  document.getElementById('edit-success').style.display = 'block';
+  await loadTeam();
+  setTimeout(closeModal, 1000);
+}
+
+async function toggleActive() {
+  if (!editingEmployee) return;
+  const newStatus = !editingEmployee.is_active;
+  await sb.from('employees').update({ is_active: newStatus }).eq('employee_id', editingEmployee.employee_id);
+  await loadTeam();
+  closeModal();
 }
 
 async function init() {
