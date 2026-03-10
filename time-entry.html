@@ -9,499 +9,548 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #07090f; --surface: #0d1120; --border: #1a2640;
-      --accent: #00e5ff; --purple: #7c3aed; --text: #e2e8f0;
-      --muted: #4a6285; --success: #4ade80; --warning: #fbbf24; --danger: #f87171;
+      --bg: #1e2a3a;
+      --surface: #263447;
+      --surface2: #2f3f55;
+      --border: #3a5068;
+      --accent: #38bdf8;
+      --accent2: #818cf8;
+      --text: #f0f4f8;
+      --text2: #94a3b8;
+      --success: #4ade80;
+      --warning: #fbbf24;
+      --danger: #f87171;
     }
     body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
-    body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 40px 40px; opacity: 0.2; pointer-events: none; z-index: 0; }
-
-    .topnav { background: #0b0f1c; border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; height: 56px; gap: 12px; position: sticky; top: 0; z-index: 50; }
-    .nav-back { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
-    .nav-back:hover { border-color: var(--accent); color: var(--accent); }
-    .nav-bar { width: 5px; height: 32px; background: linear-gradient(180deg,var(--accent),var(--purple)); border-radius: 3px; }
-    .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; }
-    .nav-right { margin-left: auto; font-size: 11px; color: var(--muted); }
-    .nav-right span { color: var(--text); }
 
     #loading { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
 
-    .main { padding: 20px; max-width: 600px; margin: 0 auto; position: relative; z-index: 1; }
+    /* NAV */
+    .topnav { background: #182230; border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; height: 56px; gap: 12px; position: sticky; top: 0; z-index: 50; }
+    .nav-back { background: none; border: 1px solid var(--border); color: var(--text2); font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; text-decoration: none; }
+    .nav-back:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-bar { width: 5px; height: 32px; background: linear-gradient(180deg, var(--accent), var(--accent2)); border-radius: 3px; }
+    .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--text); }
+    .nav-right { margin-left: auto; font-size: 11px; color: var(--text2); }
+    .nav-right span { color: var(--text); }
 
-    .week-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; }
+    /* MAIN */
+    .main { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+    /* WEEK BAR */
+    .week-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px; display: flex; align-items: center; box-shadow: 0 4px 16px #0004; }
     .week-stat { flex: 1; text-align: center; }
     .week-stat + .week-stat { border-left: 1px solid var(--border); }
-    .week-num { font-family: 'Bebas Neue', sans-serif; font-size: 26px; line-height: 1; }
-    .week-lbl { font-size: 9px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
-    .num-reg { color: #7dd3fc; } .num-ot { color: var(--warning); } .num-dt { color: var(--danger); } .num-total { color: var(--accent); }
+    .week-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; }
+    .week-lbl { font-size: 9px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; margin-top: 3px; }
+    .num-reg { color: #7dd3fc; }
+    .num-ot { color: var(--warning); }
+    .num-dt { color: var(--danger); }
+    .num-total { color: var(--accent); }
 
-    .btn-add-time { width: 100%; background: linear-gradient(135deg, var(--accent), var(--purple)); border: none; border-radius: 10px; color: #000; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; padding: 16px; cursor: pointer; margin-bottom: 24px; transition: opacity 0.2s, transform 0.1s; }
-    .btn-add-time:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-add-time:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+    /* ADD BUTTON */
+    .btn-add-time { width: 100%; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 12px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 3px; padding: 18px; cursor: pointer; margin-bottom: 24px; transition: opacity 0.2s, transform 0.1s; box-shadow: 0 4px 20px #38bdf844; }
+    .btn-add-time:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-add-time:disabled { opacity: 0.3; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .entries-header { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
-    .entry-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
-    .entry-card:hover { border-color: var(--accent); transform: translateX(2px); }
+    /* ENTRIES */
+    .entries-header { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .entry-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 8px #0003; }
+    .entry-card:hover { background: var(--surface2); transform: translateX(3px); }
     .entry-card.locked { border-left-color: var(--warning); cursor: default; }
     .entry-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .entry-job { font-size: 13px; color: var(--accent); }
-    .entry-date { font-size: 11px; color: var(--muted); }
-    .entry-time { font-size: 12px; color: #94a3b8; margin-bottom: 8px; }
+    .entry-job { font-size: 13px; color: var(--accent); font-weight: 500; }
+    .entry-date { font-size: 11px; color: var(--text2); }
+    .entry-time { font-size: 12px; color: var(--text2); margin-bottom: 8px; }
     .entry-pills { display: flex; gap: 6px; flex-wrap: wrap; }
-    .pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 10px; }
+    .pill { display: inline-block; padding: 3px 10px; border-radius: 99px; font-size: 10px; font-weight: 500; }
     .pill-reg { background: #1e3a5f; color: #7dd3fc; }
     .pill-ot { background: #3d2a00; color: var(--warning); }
     .pill-dt { background: #3b0a0a; color: var(--danger); }
-    .entry-notes { font-size: 11px; color: var(--muted); margin-top: 6px; font-style: italic; }
-    .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 12px; }
-    .empty-state .icon { font-size: 36px; margin-bottom: 10px; }
+    .entry-notes { font-size: 11px; color: var(--text2); margin-top: 6px; font-style: italic; }
+    .empty-state { text-align: center; padding: 48px 20px; color: var(--text2); font-size: 13px; line-height: 1.8; }
+    .empty-state .icon { font-size: 40px; margin-bottom: 12px; display: block; }
 
-    .submit-area { margin-top: 24px; }
-    .btn-submit { width: 100%; background: none; border: 1px solid var(--accent); color: var(--accent); font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
-    .btn-submit:hover { background: var(--accent); color: #000; }
-    .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
-    .btn-reopen { width: 100%; background: none; border: 1px solid var(--warning); color: var(--warning); font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 14px; border-radius: 10px; cursor: pointer; margin-top: 10px; }
-    .status-banner { padding: 12px 16px; border-radius: 8px; font-size: 12px; margin-top: 12px; text-align: center; }
-    .status-submitted { background: #0f2918; border: 1px solid #166534; color: var(--success); }
-    .status-locked { background: #1c1505; border: 1px solid #854d0e; color: var(--warning); }
+    /* SUBMIT */
+    .submit-area { margin-top: 24px; padding-bottom: 40px; }
+    .btn-submit { width: 100%; background: none; border: 2px solid var(--accent); color: var(--accent); font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; padding: 14px; border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .btn-submit:hover { background: var(--accent); color: #fff; }
+    .btn-reopen { width: 100%; background: none; border: 2px solid var(--warning); color: var(--warning); font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 14px; border-radius: 12px; cursor: pointer; margin-top: 10px; transition: all 0.2s; }
+    .btn-reopen:hover { background: var(--warning); color: #000; }
+    .status-banner { padding: 14px 18px; border-radius: 10px; font-size: 12px; margin-top: 12px; text-align: center; }
+    .status-submitted { background: #0f291866; border: 1px solid #166534; color: var(--success); }
+    .status-locked { background: #1c150566; border: 1px solid #854d0e; color: var(--warning); }
 
     /* BOTTOM SHEET */
-    .sheet-overlay { display: none; position: fixed; inset: 0; background: #000000bb; z-index: 200; }
+    .sheet-overlay { display: none; position: fixed; inset: 0; background: #000000aa; z-index: 200; backdrop-filter: blur(4px); }
     .sheet-overlay.open { display: block; }
-    .bottom-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 201; background: #0f1729; border-top: 1px solid var(--border); border-radius: 20px 20px 0 0; padding: 20px; max-width: 600px; margin: 0 auto; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1); max-height: 92vh; overflow-y: auto; }
+    .bottom-sheet { position: fixed; bottom: 0; left: 0; right: 0; z-index: 201; background: #1e2e42; border-top: 2px solid var(--border); border-radius: 24px 24px 0 0; padding: 20px 20px 40px; max-width: 600px; margin: 0 auto; transform: translateY(100%); transition: transform 0.35s cubic-bezier(0.32,0.72,0,1); max-height: 90vh; overflow-y: auto; box-shadow: 0 -8px 40px #0006; }
     .bottom-sheet.open { transform: translateY(0); }
-    .sheet-handle { width: 40px; height: 4px; background: var(--border); border-radius: 99px; margin: 0 auto 20px; }
-    .sheet-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
+    .sheet-handle { width: 44px; height: 5px; background: var(--border); border-radius: 99px; margin: 0 auto 20px; }
+    .sheet-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
 
     .form-field { margin-bottom: 16px; }
-    .form-label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .form-label { display: block; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
     .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 12px 14px; outline: none; transition: border-color 0.2s; }
     .form-input:focus { border-color: var(--accent); }
-    select.form-input option { background: #111827; }
+    select.form-input option { background: #1e2e42; }
 
-    /* DRUM PICKER */
-    .time-picker-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .picker-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
-    .drum-picker { height: 160px; overflow: hidden; position: relative; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; cursor: grab; user-select: none; }
-    .drum-picker:active { cursor: grabbing; }
-    .drum-picker::before, .drum-picker::after { content: ''; position: absolute; left: 0; right: 0; height: 56px; z-index: 2; pointer-events: none; }
-    .drum-picker::before { top: 0; background: linear-gradient(to bottom, #0f1729 0%, transparent 100%); }
-    .drum-picker::after { bottom: 0; background: linear-gradient(to top, #0f1729 0%, transparent 100%); }
-    .drum-selector { position: absolute; top: 50%; left: 0; right: 0; height: 40px; transform: translateY(-50%); border-top: 1px solid var(--accent); border-bottom: 1px solid var(--accent); background: #00e5ff0a; pointer-events: none; z-index: 1; }
-    .drum-list { position: absolute; top: 0; left: 0; right: 0; will-change: transform; }
-    .drum-item { height: 40px; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: var(--muted); letter-spacing: 1px; transition: color 0.1s; }
-    .drum-item.selected { color: var(--text); }
+    /* ── DRUM PICKER ── */
+    .time-picker-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .picker-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
 
-    .calc-row { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
-    .calc-item { flex: 1; text-align: center; padding: 10px 4px; border-right: 1px solid var(--border); }
+    .drum-wrap { position: relative; height: 200px; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; touch-action: none; cursor: grab; }
+    .drum-wrap:active { cursor: grabbing; }
+
+    /* fade edges */
+    .drum-wrap::before, .drum-wrap::after { content: ''; position: absolute; left: 0; right: 0; height: 70px; pointer-events: none; z-index: 2; }
+    .drum-wrap::before { top: 0; background: linear-gradient(to bottom, #1e2e42 0%, transparent 100%); }
+    .drum-wrap::after { bottom: 0; background: linear-gradient(to top, #1e2e42 0%, transparent 100%); }
+
+    /* selection band */
+    .drum-band { position: absolute; top: 50%; left: 0; right: 0; height: 48px; transform: translateY(-50%); border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); background: #38bdf812; z-index: 1; pointer-events: none; border-radius: 4px; }
+
+    .drum-scroller { position: absolute; top: 0; left: 0; right: 0; }
+    .drum-cell { height: 48px; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; color: #4a6285; transition: color 0.1s, font-size 0.1s; user-select: none; }
+    .drum-cell.active { color: var(--text); font-size: 26px; }
+
+    /* CALC */
+    .calc-row { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+    .calc-item { flex: 1; text-align: center; padding: 12px 4px; border-right: 1px solid var(--border); }
     .calc-item:last-child { border-right: none; }
-    .calc-num { font-family: 'Bebas Neue', sans-serif; font-size: 22px; }
-    .calc-lbl { font-size: 9px; color: var(--muted); letter-spacing: 1px; }
+    .calc-num { font-family: 'Bebas Neue', sans-serif; font-size: 24px; }
+    .calc-lbl { font-size: 9px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
 
-    .sheet-actions { display: flex; gap: 10px; margin-top: 4px; padding-bottom: 10px; }
-    .btn-save { flex: 1; background: var(--accent); border: none; color: #000; padding: 14px; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; cursor: pointer; }
-    .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
-    .btn-cancel-sm { background: none; border: 1px solid var(--border); color: var(--muted); padding: 14px 20px; border-radius: 8px; font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; }
-    .btn-del { background: none; border: 1px solid #7f1d1d; color: var(--danger); padding: 14px; border-radius: 8px; cursor: pointer; font-size: 16px; }
+    /* ACTIONS */
+    .sheet-actions { display: flex; gap: 10px; margin-top: 8px; }
+    .btn-save { flex: 1; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; color: #fff; padding: 14px; border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.2s; }
+    .btn-save:hover { opacity: 0.9; }
+    .btn-cancel-sm { background: none; border: 1px solid var(--border); color: var(--text2); padding: 14px 18px; border-radius: 10px; font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .btn-cancel-sm:hover { border-color: var(--text2); }
+    .btn-del { background: none; border: 1px solid #7f1d1d; color: var(--danger); padding: 14px 16px; border-radius: 10px; cursor: pointer; font-size: 16px; transition: all 0.2s; }
+    .btn-del:hover { background: #3b0a0a; }
   </style>
 </head>
 <body>
-  <div id="loading">LOADING...</div>
+<div id="loading">LOADING...</div>
 
-  <nav class="topnav">
-    <a class="nav-back" href="index.html">← Hub</a>
-    <div class="nav-bar"></div>
-    <div class="nav-title">Time Entry</div>
-    <div class="nav-right">Week of <span id="nav-week">—</span></div>
-  </nav>
+<nav class="topnav">
+  <a class="nav-back" href="index.html">← Hub</a>
+  <div class="nav-bar"></div>
+  <div class="nav-title">Time Entry</div>
+  <div class="nav-right">Week of <span id="nav-week">—</span></div>
+</nav>
 
-  <div class="main">
-    <div class="week-bar">
-      <div class="week-stat"><div class="week-num num-reg" id="tot-reg">0.0</div><div class="week-lbl">Reg</div></div>
-      <div class="week-stat"><div class="week-num num-ot" id="tot-ot">0.0</div><div class="week-lbl">OT</div></div>
-      <div class="week-stat"><div class="week-num num-dt" id="tot-dt">0.0</div><div class="week-lbl">DT</div></div>
-      <div class="week-stat"><div class="week-num num-total" id="tot-total">0.0</div><div class="week-lbl">Total</div></div>
-    </div>
-
-    <button class="btn-add-time" id="btn-add-time" onclick="openAdd()">+ LOG TIME</button>
-
-    <div class="entries-header" id="entries-header"></div>
-    <div id="entries-list"></div>
-    <div class="submit-area" id="submit-area"></div>
+<div class="main">
+  <div class="week-bar">
+    <div class="week-stat"><div class="week-num num-reg" id="tot-reg">0.0</div><div class="week-lbl">Reg</div></div>
+    <div class="week-stat"><div class="week-num num-ot" id="tot-ot">0.0</div><div class="week-lbl">OT</div></div>
+    <div class="week-stat"><div class="week-num num-dt" id="tot-dt">0.0</div><div class="week-lbl">DT</div></div>
+    <div class="week-stat"><div class="week-num num-total" id="tot-total">0.0</div><div class="week-lbl">Total</div></div>
   </div>
 
-  <div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
-  <div class="bottom-sheet" id="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="sheet-title">LOG TIME</div>
+  <button class="btn-add-time" id="btn-add-time" onclick="openAdd()">+ LOG TIME</button>
 
-    <div class="form-field">
-      <label class="form-label">Date</label>
-      <input class="form-input" type="date" id="f-date" />
-    </div>
-    <div class="form-field">
-      <label class="form-label">Job</label>
-      <select class="form-input" id="f-job"></select>
-    </div>
+  <div class="entries-header" id="entries-header"></div>
+  <div id="entries-list"></div>
+  <div class="submit-area" id="submit-area"></div>
+</div>
 
-    <div class="time-picker-row">
-      <div>
-        <span class="picker-label">Start Time</span>
-        <div class="drum-picker" id="picker-start">
-          <div class="drum-selector"></div>
-          <div class="drum-list" id="drum-start"></div>
-        </div>
+<!-- OVERLAY -->
+<div class="sheet-overlay" id="overlay" onclick="closeSheet()"></div>
+
+<!-- BOTTOM SHEET -->
+<div class="bottom-sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheet-title">LOG TIME</div>
+
+  <div class="form-field">
+    <label class="form-label">Date</label>
+    <input class="form-input" type="date" id="f-date" />
+  </div>
+
+  <div class="form-field">
+    <label class="form-label">Job</label>
+    <select class="form-input" id="f-job"></select>
+  </div>
+
+  <div class="time-picker-row">
+    <div>
+      <span class="picker-label">Start Time</span>
+      <div class="drum-wrap" id="drum-start">
+        <div class="drum-band"></div>
+        <div class="drum-scroller" id="scroller-start"></div>
       </div>
-      <div>
-        <span class="picker-label">End Time</span>
-        <div class="drum-picker" id="picker-end">
-          <div class="drum-selector"></div>
-          <div class="drum-list" id="drum-end"></div>
-        </div>
+    </div>
+    <div>
+      <span class="picker-label">End Time</span>
+      <div class="drum-wrap" id="drum-end">
+        <div class="drum-band"></div>
+        <div class="drum-scroller" id="scroller-end"></div>
       </div>
-    </div>
-
-    <div class="form-field">
-      <label class="form-label">Break (minutes)</label>
-      <input class="form-input" type="number" id="f-break" min="0" value="0" oninput="updateCalc()" />
-    </div>
-
-    <div class="calc-row">
-      <div class="calc-item"><div class="calc-num num-reg" id="c-reg">—</div><div class="calc-lbl">Reg</div></div>
-      <div class="calc-item"><div class="calc-num num-ot" id="c-ot">—</div><div class="calc-lbl">OT</div></div>
-      <div class="calc-item"><div class="calc-num num-dt" id="c-dt">—</div><div class="calc-lbl">DT</div></div>
-      <div class="calc-item"><div class="calc-num num-total" id="c-total">—</div><div class="calc-lbl">Total</div></div>
-    </div>
-
-    <div class="form-field">
-      <label class="form-label">Notes (optional)</label>
-      <input class="form-input" type="text" id="f-notes" placeholder="e.g. Load in, show night..." />
-    </div>
-
-    <div class="sheet-actions">
-      <button class="btn-del" id="btn-del" style="display:none" onclick="deleteEntry()">🗑</button>
-      <button class="btn-cancel-sm" onclick="closeSheet()">Cancel</button>
-      <button class="btn-save" id="btn-save" onclick="saveEntry()">Save Entry</button>
     </div>
   </div>
 
-  <script>
-    const SUPABASE_URL = 'https://xfpgbjxavymtfmfobecc.supabase.co';
-    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  <div class="form-field">
+    <label class="form-label">Break (minutes)</label>
+    <input class="form-input" type="number" id="f-break" min="0" value="0" oninput="updateCalc()" />
+  </div>
 
-    let currentUser = null, jobs = [], entries = [], sheet = null;
-    let payRules = { ot_threshold: 8, dt_threshold: 12 };
-    let editingId = null, weekDates = [];
-    let startVal = '08:00', endVal = '17:00';
+  <div class="calc-row">
+    <div class="calc-item"><div class="calc-num num-reg" id="c-reg">—</div><div class="calc-lbl">Reg</div></div>
+    <div class="calc-item"><div class="calc-num num-ot" id="c-ot">—</div><div class="calc-lbl">OT</div></div>
+    <div class="calc-item"><div class="calc-num num-dt" id="c-dt">—</div><div class="calc-lbl">DT</div></div>
+    <div class="calc-item"><div class="calc-num num-total" id="c-total">—</div><div class="calc-lbl">Total</div></div>
+  </div>
 
-    // Build 15-min interval times
-    const TIMES = [];
-    for (let h = 0; h < 24; h++)
-      for (let m = 0; m < 60; m += 15)
-        TIMES.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
+  <div class="form-field">
+    <label class="form-label">Notes (optional)</label>
+    <input class="form-input" type="text" id="f-notes" placeholder="e.g. Load in, show night..." />
+  </div>
 
-    const ITEM_H = 40, PAD = 2; // pad items above/below
+  <div class="sheet-actions">
+    <button class="btn-del" id="btn-del" style="display:none" onclick="deleteEntry()">🗑</button>
+    <button class="btn-cancel-sm" onclick="closeSheet()">Cancel</button>
+    <button class="btn-save" onclick="saveEntry()">Save Entry</button>
+  </div>
+</div>
 
-    function buildDrum(listId, initVal, onChangeFn) {
-      const list = document.getElementById(listId);
-      const picker = list.closest('.drum-picker');
-      list.innerHTML = '';
+<script>
+  const SUPABASE_URL  = 'https://xfpgbjxavymtfmfobecc.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-      for (let i = 0; i < PAD; i++) {
-        const el = document.createElement('div');
-        el.className = 'drum-item';
-        list.appendChild(el);
-      }
-      TIMES.forEach(t => {
-        const el = document.createElement('div');
-        el.className = 'drum-item';
-        el.textContent = t;
-        list.appendChild(el);
-      });
-      for (let i = 0; i < PAD; i++) {
-        const el = document.createElement('div');
-        el.className = 'drum-item';
-        list.appendChild(el);
-      }
+  let currentUser = null, jobs = [], entries = [], sheet = null;
+  let payRules = { ot_threshold: 8, dt_threshold: 12 };
+  let editingId = null, weekDates = [];
+  let startVal = '08:00', endVal = '17:00';
 
-      let currentIdx = TIMES.indexOf(initVal);
-      if (currentIdx < 0) currentIdx = 0;
+  // ── TIME LIST (15 min intervals) ──
+  const TIMES = [];
+  for (let h = 0; h < 24; h++)
+    for (let m = 0; m < 60; m += 15)
+      TIMES.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
 
-      function updateSelected(idx) {
-        list.querySelectorAll('.drum-item').forEach((el, i) => {
-          el.classList.toggle('selected', i === idx + PAD);
-        });
-      }
+  const CELL_H = 48;
 
-      function setIdx(idx, animate) {
-        idx = Math.max(0, Math.min(TIMES.length - 1, idx));
-        currentIdx = idx;
-        list.style.transition = animate ? 'transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)' : 'none';
-        list.style.transform = `translateY(${-idx * ITEM_H}px)`;
-        updateSelected(idx);
-        onChangeFn(TIMES[idx]);
-      }
+  // ── DRUM PICKER ──
+  function makeDrum(wrapperId, scrollerId, initVal, onChange) {
+    const wrap = document.getElementById(wrapperId);
+    const scroller = document.getElementById(scrollerId);
+    let idx = Math.max(0, TIMES.indexOf(initVal));
 
-      setIdx(currentIdx, false);
+    // Build cells — add padding so first/last can center
+    const PAD = Math.floor((wrap.clientHeight || 200) / 2 / CELL_H);
+    scroller.innerHTML = '';
+    for (let i = 0; i < PAD; i++) scroller.appendChild(makeCell(''));
+    TIMES.forEach(t => scroller.appendChild(makeCell(t)));
+    for (let i = 0; i < PAD; i++) scroller.appendChild(makeCell(''));
 
-      // Touch
-      let touchStartY, touchStartIdx;
-      picker.addEventListener('touchstart', e => {
-        touchStartY = e.touches[0].clientY;
-        touchStartIdx = currentIdx;
-        list.style.transition = 'none';
-      }, { passive: true });
-      picker.addEventListener('touchmove', e => {
-        const dy = touchStartY - e.touches[0].clientY;
-        const delta = Math.round(dy / ITEM_H);
-        const newIdx = Math.max(0, Math.min(TIMES.length - 1, touchStartIdx + delta));
-        currentIdx = newIdx;
-        list.style.transform = `translateY(${-newIdx * ITEM_H}px)`;
-        updateSelected(newIdx);
-        onChangeFn(TIMES[newIdx]);
-      }, { passive: true });
-      picker.addEventListener('touchend', () => setIdx(currentIdx, true));
-
-      // Mouse drag
-      let dragging = false, mouseStartY, mouseStartIdx;
-      picker.addEventListener('mousedown', e => {
-        dragging = true; mouseStartY = e.clientY; mouseStartIdx = currentIdx;
-        list.style.transition = 'none'; e.preventDefault();
-      });
-      window.addEventListener('mousemove', e => {
-        if (!dragging) return;
-        const dy = mouseStartY - e.clientY;
-        const delta = Math.round(dy / ITEM_H);
-        const newIdx = Math.max(0, Math.min(TIMES.length - 1, mouseStartIdx + delta));
-        currentIdx = newIdx;
-        list.style.transform = `translateY(${-newIdx * ITEM_H}px)`;
-        updateSelected(newIdx);
-        onChangeFn(TIMES[newIdx]);
-      });
-      window.addEventListener('mouseup', () => { if (dragging) { dragging = false; setIdx(currentIdx, true); } });
-
-      // Scroll wheel
-      picker.addEventListener('wheel', e => {
-        e.preventDefault();
-        setIdx(currentIdx + Math.sign(e.deltaY), true);
-      }, { passive: false });
+    function makeCell(text) {
+      const d = document.createElement('div');
+      d.className = 'drum-cell';
+      d.textContent = text;
+      return d;
     }
 
-    function calcHours(start, end, brk) {
-      if (!start || !end) return null;
-      let [sh, sm] = start.split(':').map(Number);
-      let [eh, em] = end.split(':').map(Number);
-      let sM = sh * 60 + sm, eM = eh * 60 + em;
-      if (eM <= sM) eM += 24 * 60;
-      let total = Math.max((eM - sM - (brk || 0)) / 60, 0);
-      const ot = payRules.ot_threshold, dt = payRules.dt_threshold;
-      return {
-        regular: +Math.min(total, ot).toFixed(2),
-        ot: +Math.min(Math.max(total - ot, 0), dt - ot).toFixed(2),
-        dt: +Math.max(total - dt, 0).toFixed(2),
-        total: +total.toFixed(2)
-      };
+    function goTo(i, animate) {
+      i = Math.max(0, Math.min(TIMES.length - 1, i));
+      idx = i;
+      const y = -(i * CELL_H);
+      scroller.style.transition = animate ? 'transform 0.2s ease-out' : 'none';
+      scroller.style.transform = `translateY(${y}px)`;
+      // highlight active cell
+      scroller.querySelectorAll('.drum-cell').forEach((c, ci) => {
+        c.classList.toggle('active', ci - PAD === i);
+      });
+      onChange(TIMES[i]);
     }
 
-    function updateCalc() {
-      const brk = parseInt(document.getElementById('f-break').value) || 0;
-      const h = calcHours(startVal, endVal, brk);
-      if (!h) return;
-      document.getElementById('c-reg').textContent = h.regular + 'h';
-      document.getElementById('c-ot').textContent = h.ot + 'h';
-      document.getElementById('c-dt').textContent = h.dt + 'h';
-      document.getElementById('c-total').textContent = h.total + 'h';
-    }
+    goTo(idx, false);
 
-    function openAdd() {
-      editingId = null;
-      document.getElementById('sheet-title').textContent = 'LOG TIME';
-      document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
-      document.getElementById('f-job').value = '';
-      document.getElementById('f-break').value = '0';
-      document.getElementById('f-notes').value = '';
-      document.getElementById('btn-del').style.display = 'none';
-      startVal = '08:00'; endVal = '17:00';
-      buildDrum('drum-start', startVal, v => { startVal = v; updateCalc(); });
-      buildDrum('drum-end', endVal, v => { endVal = v; updateCalc(); });
+    // ── TOUCH ──
+    let touchStartY = 0, touchStartIdx = 0;
+    wrap.addEventListener('touchstart', e => {
+      touchStartY = e.touches[0].clientY;
+      touchStartIdx = idx;
+      scroller.style.transition = 'none';
+    }, { passive: true });
+
+    wrap.addEventListener('touchmove', e => {
+      e.preventDefault();
+      const diff = touchStartY - e.touches[0].clientY;
+      const delta = Math.round(diff / CELL_H);
+      goTo(touchStartIdx + delta, false);
+    }, { passive: false });
+
+    wrap.addEventListener('touchend', () => goTo(idx, true));
+
+    // ── MOUSE DRAG ──
+    let dragging = false, mouseStartY = 0, mouseStartIdx = 0;
+    wrap.addEventListener('mousedown', e => {
+      dragging = true;
+      mouseStartY = e.clientY;
+      mouseStartIdx = idx;
+      scroller.style.transition = 'none';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', e => {
+      if (!dragging) return;
+      const diff = mouseStartY - e.clientY;
+      const delta = Math.round(diff / CELL_H);
+      goTo(mouseStartIdx + delta, false);
+    });
+    document.addEventListener('mouseup', () => {
+      if (dragging) { dragging = false; goTo(idx, true); }
+    });
+
+    // ── SCROLL WHEEL ──
+    wrap.addEventListener('wheel', e => {
+      e.preventDefault();
+      goTo(idx + (e.deltaY > 0 ? 1 : -1), true);
+    }, { passive: false });
+
+    return { getValue: () => TIMES[idx], goTo };
+  }
+
+  let drumStart, drumEnd;
+
+  // ── CALC ──
+  function calcHours(start, end, brk) {
+    if (!start || !end) return null;
+    let [sh, sm] = start.split(':').map(Number);
+    let [eh, em] = end.split(':').map(Number);
+    let sM = sh * 60 + sm, eM = eh * 60 + em;
+    if (eM <= sM) eM += 24 * 60;
+    let total = Math.max((eM - sM - (brk || 0)) / 60, 0);
+    const otT = payRules.ot_threshold, dtT = payRules.dt_threshold;
+    return {
+      regular: +Math.min(total, otT).toFixed(2),
+      ot: +Math.min(Math.max(total - otT, 0), dtT - otT).toFixed(2),
+      dt: +Math.max(total - dtT, 0).toFixed(2),
+      total: +total.toFixed(2)
+    };
+  }
+
+  function updateCalc() {
+    const brk = parseInt(document.getElementById('f-break').value) || 0;
+    const h = calcHours(startVal, endVal, brk);
+    if (!h) return;
+    document.getElementById('c-reg').textContent = h.regular + 'h';
+    document.getElementById('c-ot').textContent = h.ot + 'h';
+    document.getElementById('c-dt').textContent = h.dt + 'h';
+    document.getElementById('c-total').textContent = h.total + 'h';
+  }
+
+  // ── OPEN/CLOSE SHEET ──
+  function openAdd() {
+    editingId = null;
+    document.getElementById('sheet-title').textContent = 'LOG TIME';
+    document.getElementById('f-date').value = new Date().toISOString().split('T')[0];
+    document.getElementById('f-job').value = '';
+    document.getElementById('f-break').value = '0';
+    document.getElementById('f-notes').value = '';
+    document.getElementById('btn-del').style.display = 'none';
+    startVal = '08:00'; endVal = '17:00';
+    showSheet();
+    setTimeout(() => {
+      drumStart = makeDrum('drum-start', 'scroller-start', startVal, v => { startVal = v; updateCalc(); });
+      drumEnd   = makeDrum('drum-end',   'scroller-end',   endVal,   v => { endVal = v;   updateCalc(); });
       updateCalc();
-      document.getElementById('overlay').classList.add('open');
-      document.getElementById('sheet').classList.add('open');
-    }
+    }, 50);
+  }
 
-    function openEditById(id) {
-      const entry = entries.find(e => e.entry_id === id);
-      if (!entry) return;
-      editingId = id;
-      document.getElementById('sheet-title').textContent = 'EDIT ENTRY';
-      document.getElementById('f-date').value = entry.entry_date;
-      document.getElementById('f-job').value = entry.job_id;
-      document.getElementById('f-break').value = entry.break_minutes || 0;
-      document.getElementById('f-notes').value = entry.notes || '';
-      document.getElementById('btn-del').style.display = 'block';
-      startVal = entry.start_time?.slice(0,5) || '08:00';
-      endVal = entry.end_time?.slice(0,5) || '17:00';
-      buildDrum('drum-start', startVal, v => { startVal = v; updateCalc(); });
-      buildDrum('drum-end', endVal, v => { endVal = v; updateCalc(); });
+  function openEditById(id) {
+    const e = entries.find(x => x.entry_id === id);
+    if (!e) return;
+    editingId = id;
+    document.getElementById('sheet-title').textContent = 'EDIT ENTRY';
+    document.getElementById('f-date').value = e.entry_date;
+    document.getElementById('f-job').value = e.job_id;
+    document.getElementById('f-break').value = e.break_minutes || 0;
+    document.getElementById('f-notes').value = e.notes || '';
+    document.getElementById('btn-del').style.display = 'block';
+    startVal = e.start_time?.slice(0,5) || '08:00';
+    endVal   = e.end_time?.slice(0,5)   || '17:00';
+    showSheet();
+    setTimeout(() => {
+      drumStart = makeDrum('drum-start', 'scroller-start', startVal, v => { startVal = v; updateCalc(); });
+      drumEnd   = makeDrum('drum-end',   'scroller-end',   endVal,   v => { endVal = v;   updateCalc(); });
       updateCalc();
-      document.getElementById('overlay').classList.add('open');
-      document.getElementById('sheet').classList.add('open');
+    }, 50);
+  }
+
+  function showSheet() {
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('sheet').classList.add('open');
+  }
+
+  function closeSheet() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('sheet').classList.remove('open');
+  }
+
+  // ── SAVE / DELETE ──
+  async function saveEntry() {
+    const date  = document.getElementById('f-date').value;
+    const jobId = parseInt(document.getElementById('f-job').value);
+    const brk   = parseInt(document.getElementById('f-break').value) || 0;
+    const notes = document.getElementById('f-notes').value;
+    if (!date || !jobId) { alert('Please select a date and job.'); return; }
+    const h = calcHours(startVal, endVal, brk);
+    const payload = {
+      employee_id: currentUser.id, job_id: jobId, entry_date: date,
+      start_time: startVal, end_time: endVal, break_minutes: brk,
+      is_overnight: endVal <= startVal,
+      total_hours: h.total, regular_hours: h.regular, ot_hours: h.ot, dt_hours: h.dt,
+      notes: notes || null
+    };
+    if (editingId) {
+      await sb.from('time_entries').update(payload).eq('entry_id', editingId);
+    } else {
+      await sb.from('time_entries').insert(payload);
+    }
+    closeSheet();
+    await loadEntries();
+  }
+
+  async function deleteEntry() {
+    if (!editingId || !confirm('Delete this entry?')) return;
+    await sb.from('time_entries').delete().eq('entry_id', editingId);
+    closeSheet();
+    await loadEntries();
+  }
+
+  async function submitSheet() {
+    if (!confirm('Submit this week for review?')) return;
+    if (sheet) {
+      await sb.from('time_sheets').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
+    } else {
+      await sb.from('time_sheets').insert({ employee_id: currentUser.id, week_start_date: weekDates[0], week_end_date: weekDates[6], status: 'submitted', submitted_at: new Date().toISOString() });
+    }
+    await loadSheet();
+  }
+
+  async function reopenSheet() {
+    if (!sheet) return;
+    await sb.from('time_sheets').update({ status: 'open', reopened_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
+    await loadSheet();
+  }
+
+  // ── RENDER ──
+  function renderEntries() {
+    const isLocked    = sheet?.status === 'locked';
+    const isSubmitted = sheet?.status === 'submitted';
+    const canEdit     = !isLocked && !isSubmitted;
+    document.getElementById('btn-add-time').disabled = isLocked || isSubmitted;
+
+    const list   = document.getElementById('entries-list');
+    const header = document.getElementById('entries-header');
+
+    if (entries.length === 0) {
+      header.textContent = '';
+      list.innerHTML = `<div class="empty-state"><span class="icon">⏱</span>No entries this week yet.<br>Tap <strong>+ LOG TIME</strong> to add your first shift.</div>`;
+    } else {
+      header.textContent = `This Week — ${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}`;
+      list.innerHTML = [...entries].sort((a,b) => a.entry_date > b.entry_date ? 1 : -1).map(e => {
+        const job = jobs.find(j => j.job_id === e.job_id);
+        const h   = calcHours(e.start_time, e.end_time, e.break_minutes);
+        const dateStr = new Date(e.entry_date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+        return `<div class="entry-card${isLocked ? ' locked' : ''}" ${canEdit ? `onclick="openEditById(${e.entry_id})"` : ''}>
+          <div class="entry-top">
+            <div class="entry-job">${job?.job_name || '—'}</div>
+            <div class="entry-date">${dateStr}</div>
+          </div>
+          <div class="entry-time">${e.start_time?.slice(0,5)} → ${e.end_time?.slice(0,5)}${e.break_minutes > 0 ? ` · ${e.break_minutes}min break` : ''}</div>
+          <div class="entry-pills">
+            ${h?.regular > 0 ? `<span class="pill pill-reg">${h.regular}h reg</span>` : ''}
+            ${h?.ot > 0      ? `<span class="pill pill-ot">${h.ot}h OT</span>`        : ''}
+            ${h?.dt > 0      ? `<span class="pill pill-dt">${h.dt}h DT</span>`        : ''}
+          </div>
+          ${e.notes ? `<div class="entry-notes">${e.notes}</div>` : ''}
+        </div>`;
+      }).join('');
     }
 
-    function closeSheet() {
-      document.getElementById('overlay').classList.remove('open');
-      document.getElementById('sheet').classList.remove('open');
-    }
+    const totals = entries.reduce((acc, e) => {
+      const h = calcHours(e.start_time, e.end_time, e.break_minutes);
+      if (h) { acc.regular += h.regular; acc.ot += h.ot; acc.dt += h.dt; acc.total += h.total; }
+      return acc;
+    }, { regular: 0, ot: 0, dt: 0, total: 0 });
+    document.getElementById('tot-reg').textContent   = totals.regular.toFixed(1);
+    document.getElementById('tot-ot').textContent    = totals.ot.toFixed(1);
+    document.getElementById('tot-dt').textContent    = totals.dt.toFixed(1);
+    document.getElementById('tot-total').textContent = totals.total.toFixed(1);
 
-    async function saveEntry() {
-      const date = document.getElementById('f-date').value;
-      const jobId = parseInt(document.getElementById('f-job').value);
-      const brk = parseInt(document.getElementById('f-break').value) || 0;
-      const notes = document.getElementById('f-notes').value;
-      if (!date || !jobId) { alert('Please select a date and job.'); return; }
-      const h = calcHours(startVal, endVal, brk);
-      const payload = {
-        employee_id: currentUser.id, job_id: jobId, entry_date: date,
-        start_time: startVal, end_time: endVal, break_minutes: brk,
-        is_overnight: endVal <= startVal,
-        total_hours: h.total, regular_hours: h.regular, ot_hours: h.ot, dt_hours: h.dt,
-        notes: notes || null
-      };
-      if (editingId) {
-        await sb.from('time_entries').update(payload).eq('entry_id', editingId);
+    const area = document.getElementById('submit-area');
+    if (entries.length > 0) {
+      if (isLocked) {
+        area.innerHTML = `<div class="status-banner status-locked">🔒 Locked by accounting.</div>`;
+      } else if (isSubmitted) {
+        area.innerHTML = `<div class="status-banner status-submitted">✓ Submitted — pending review.</div><button class="btn-reopen" onclick="reopenSheet()">↩ REOPEN WEEK</button>`;
       } else {
-        await sb.from('time_entries').insert(payload);
+        area.innerHTML = `<button class="btn-submit" onclick="submitSheet()">SUBMIT WEEK</button>`;
       }
-      closeSheet();
-      await loadEntries();
-    }
+    } else { area.innerHTML = ''; }
+  }
 
-    async function deleteEntry() {
-      if (!editingId) return;
-      if (!confirm('Delete this entry?')) return;
-      await sb.from('time_entries').delete().eq('entry_id', editingId);
-      closeSheet();
-      await loadEntries();
-    }
+  // ── DATA ──
+  function getWeekDates() {
+    const d = new Date(), day = d.getDay();
+    const mon = new Date(d);
+    mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+    return Array.from({ length: 7 }, (_, i) => {
+      const dd = new Date(mon); dd.setDate(mon.getDate() + i);
+      return dd.toISOString().split('T')[0];
+    });
+  }
 
-    async function submitSheet() {
-      if (!confirm('Submit this week for review?')) return;
-      if (sheet) {
-        await sb.from('time_sheets').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
-      } else {
-        await sb.from('time_sheets').insert({ employee_id: currentUser.id, week_start_date: weekDates[0], week_end_date: weekDates[6], status: 'submitted', submitted_at: new Date().toISOString() });
-      }
-      await loadSheet();
-    }
+  async function loadEntries() {
+    const { data } = await sb.from('time_entries').select('*')
+      .eq('employee_id', currentUser.id)
+      .gte('entry_date', weekDates[0])
+      .lte('entry_date', weekDates[6]);
+    entries = data || [];
+    renderEntries();
+  }
 
-    async function reopenSheet() {
-      if (!sheet) return;
-      await sb.from('time_sheets').update({ status: 'open', reopened_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
-      await loadSheet();
-    }
+  async function loadSheet() {
+    const { data } = await sb.from('time_sheets').select('*')
+      .eq('employee_id', currentUser.id)
+      .eq('week_start_date', weekDates[0])
+      .maybeSingle();
+    sheet = data || null;
+    renderEntries();
+  }
 
-    function getWeekDates() {
-      const d = new Date(), day = d.getDay();
-      const mon = new Date(d);
-      mon.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
-      return Array.from({ length: 7 }, (_, i) => {
-        const dd = new Date(mon); dd.setDate(mon.getDate() + i);
-        return dd.toISOString().split('T')[0];
-      });
-    }
+  async function init() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentUser = session.user;
 
-    function renderEntries() {
-      const isLocked = sheet?.status === 'locked';
-      const isSubmitted = sheet?.status === 'submitted';
-      const canEdit = !isLocked && !isSubmitted;
-      document.getElementById('btn-add-time').disabled = isLocked || isSubmitted;
+    weekDates = getWeekDates();
+    document.getElementById('nav-week').textContent = weekDates[0];
 
-      const list = document.getElementById('entries-list');
-      const header = document.getElementById('entries-header');
+    const { data: rules } = await sb.from('pay_rules').select('*').maybeSingle();
+    if (rules) payRules = rules;
 
-      if (entries.length === 0) {
-        header.textContent = '';
-        list.innerHTML = `<div class="empty-state"><div class="icon">⏱</div>No entries this week.<br>Tap LOG TIME to add a shift.</div>`;
-      } else {
-        header.textContent = `This Week — ${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}`;
-        const sorted = [...entries].sort((a,b) => a.entry_date > b.entry_date ? 1 : -1);
-        list.innerHTML = sorted.map(e => {
-          const job = jobs.find(j => j.job_id === e.job_id);
-          const h = calcHours(e.start_time, e.end_time, e.break_minutes);
-          const dateStr = new Date(e.entry_date + 'T12:00:00').toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
-          return `<div class="entry-card${isLocked?' locked':''}" ${canEdit ? `onclick="openEditById(${e.entry_id})"` : ''}>
-            <div class="entry-top">
-              <div class="entry-job">${job?.job_name || '—'}</div>
-              <div class="entry-date">${dateStr}</div>
-            </div>
-            <div class="entry-time">${e.start_time?.slice(0,5)} → ${e.end_time?.slice(0,5)}${e.break_minutes > 0 ? ` · ${e.break_minutes}min break` : ''}</div>
-            <div class="entry-pills">
-              ${h && h.regular > 0 ? `<span class="pill pill-reg">${h.regular}h reg</span>` : ''}
-              ${h && h.ot > 0 ? `<span class="pill pill-ot">${h.ot}h OT</span>` : ''}
-              ${h && h.dt > 0 ? `<span class="pill pill-dt">${h.dt}h DT</span>` : ''}
-            </div>
-            ${e.notes ? `<div class="entry-notes">${e.notes}</div>` : ''}
-          </div>`;
-        }).join('');
-      }
+    const { data: jobData } = await sb.from('jobs').select('job_id, job_name')
+      .in('status', ['booked', 'completed']).order('job_name');
+    jobs = jobData || [];
+    const sel = document.getElementById('f-job');
+    sel.innerHTML = '<option value="">— Select a Job —</option>';
+    jobs.forEach(j => {
+      const o = document.createElement('option');
+      o.value = j.job_id; o.textContent = j.job_name;
+      sel.appendChild(o);
+    });
 
-      const totals = entries.reduce((acc, e) => {
-        const h = calcHours(e.start_time, e.end_time, e.break_minutes);
-        if (h) { acc.regular += h.regular; acc.ot += h.ot; acc.dt += h.dt; acc.total += h.total; }
-        return acc;
-      }, { regular: 0, ot: 0, dt: 0, total: 0 });
-      document.getElementById('tot-reg').textContent = totals.regular.toFixed(1);
-      document.getElementById('tot-ot').textContent = totals.ot.toFixed(1);
-      document.getElementById('tot-dt').textContent = totals.dt.toFixed(1);
-      document.getElementById('tot-total').textContent = totals.total.toFixed(1);
+    await loadEntries();
+    await loadSheet();
+    document.getElementById('loading').style.display = 'none';
+  }
 
-      const area = document.getElementById('submit-area');
-      if (entries.length > 0) {
-        if (isLocked) {
-          area.innerHTML = `<div class="status-banner status-locked">🔒 Locked by accounting.</div>`;
-        } else if (isSubmitted) {
-          area.innerHTML = `<div class="status-banner status-submitted">✓ Submitted — pending review.</div><button class="btn-reopen" onclick="reopenSheet()">↩ REOPEN WEEK</button>`;
-        } else {
-          area.innerHTML = `<button class="btn-submit" onclick="submitSheet()">SUBMIT WEEK</button>`;
-        }
-      } else { area.innerHTML = ''; }
-    }
-
-    async function loadEntries() {
-      const { data } = await sb.from('time_entries').select('*').eq('employee_id', currentUser.id).gte('entry_date', weekDates[0]).lte('entry_date', weekDates[6]);
-      entries = data || [];
-      renderEntries();
-    }
-
-    async function loadSheet() {
-      const { data } = await sb.from('time_sheets').select('*').eq('employee_id', currentUser.id).eq('week_start_date', weekDates[0]).maybeSingle();
-      sheet = data || null;
-      renderEntries();
-    }
-
-    async function init() {
-      const { data: { session } } = await sb.auth.getSession();
-      if (!session) { window.location.href = 'index.html'; return; }
-      currentUser = session.user;
-      weekDates = getWeekDates();
-      document.getElementById('nav-week').textContent = weekDates[0];
-
-      const { data: rules } = await sb.from('pay_rules').select('*').maybeSingle();
-      if (rules) payRules = rules;
-
-      const { data: jobData } = await sb.from('jobs').select('job_id, job_name').in('status', ['booked', 'completed']).order('job_name');
-      jobs = jobData || [];
-      const sel = document.getElementById('f-job');
-      sel.innerHTML = '<option value="">— Select a Job —</option>';
-      jobs.forEach(j => { const o = document.createElement('option'); o.value = j.job_id; o.textContent = j.job_name; sel.appendChild(o); });
-
-      await loadEntries();
-      await loadSheet();
-      document.getElementById('loading').style.display = 'none';
-    }
-
-    init();
-  </script>
+  init();
+</script>
 </body>
 </html>
