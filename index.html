@@ -147,11 +147,11 @@
           <div class="card-desc">Submit receipts and track reimbursable expenses per job.</div>
           <span class="card-badge badge-soon">Coming Soon</span>
         </div>
-        <div class="hub-card disabled" id="card-team">
+        <div class="hub-card disabled" id="card-team" onclick="if(this.classList.contains('owner-card'))window.location.href='team.html'">
           <div class="card-icon">👥</div>
           <div class="card-title">Team</div>
           <div class="card-desc">Add employees, manage permissions, and set pay rates.</div>
-          <span class="card-badge badge-soon">Coming Soon</span>
+          <span class="card-badge badge-soon" id="team-badge">Coming Soon</span>
         </div>
       </div>
       <div class="hub-status">
@@ -201,6 +201,15 @@
 
       const roles = perms?.map(p => p.permissions.permission_name) || ['employee'];
       document.getElementById('hub-role').textContent = roles.join(', ');
+      if (roles.includes('owner')) {
+        const card = document.getElementById('card-team');
+        card.classList.remove('disabled');
+        card.classList.add('owner-card');
+        card.style.cursor = 'pointer';
+        document.getElementById('team-badge').textContent = 'Owner Only';
+        document.getElementById('team-badge').style.background = '#2e1a5e';
+        document.getElementById('team-badge').style.color = '#818cf8';
+      }
 
       showPage('page-hub');
     }
