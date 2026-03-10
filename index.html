@@ -194,19 +194,34 @@
         document.getElementById('hub-name').textContent = `${emp.first_name} ${emp.last_name}`;
       }
 
-      const { data: perms } = await sb
+      const { data: perms, error: permErr } = await sb
         .from('employee_permissions')
         .select('permissions(permission_name)')
         .eq('employee_id', user.id);
 
+      console.log('perms:', JSON.stringify(perms), 'err:', permErr);
+
       const roles = perms?.map(p => p.permissions?.permission_name).filter(Boolean) || [];
-      document.getElementById('hub-role').textContent = roles.join(', ');
-      if (roles.includes('owner')) {
+      console.log('roles:', roles);
+      document.getElementById('hub-role').textContent = roles.length ? roles.join(', ') : 'employee';
+
+      // Also do a direct owner check as fallback
+      const { data: ownerCheck } = await sb
+        .from('employee_permissions')
+        .select('permissions!inner(permission_name)')
+        .eq('employee_id', user.id)
+        .eq('permissions.permission_name', 'owner')
+        .maybeSingle();
+
+      console.log('ownerCheck:', JSON.stringify(ownerCheck));
+
+      if (roles.includes('owner') || ownerCheck) {
         const card = document.getElementById('card-team');
         card.classList.remove('disabled');
         card.style.cursor = 'pointer';
         card.style.opacity = '1';
-        card.addEventListener('click', () => window.location.href = 'team.html');
+        card.style.pointerEvents = 'auto';
+        card.onclick = () => window.location.href = 'team.html';
         document.getElementById('team-badge').textContent = 'Owner Only';
         document.getElementById('team-badge').style.background = '#2e1a5e';
         document.getElementById('team-badge').style.color = '#818cf8';
