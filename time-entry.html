@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time Entry — Live Production Labs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07090f; --surface: #0d1120; --border: #1a2640;
+      --accent: #00e5ff; --purple: #7c3aed; --text: #e2e8f0;
+      --muted: #4a6285; --success: #4ade80; --warning: #fbbf24; --danger: #f87171;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px; opacity: 0.2; pointer-events: none; z-index: 0;
+    }
+
+    /* NAV */
+    .topnav { background: #0b0f1c; border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; height: 56px; gap: 12px; position: sticky; top: 0; z-index: 50; }
+    .nav-back { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: all 0.2s; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+    .nav-back:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-bar { width: 5px; height: 32px; background: linear-gradient(180deg,var(--accent),var(--purple)); border-radius: 3px; }
+    .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; }
+    .nav-sub { font-size: 10px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+    .nav-right { margin-left: auto; font-size: 11px; color: var(--muted); }
+    .nav-right span { color: var(--text); }
+
+    /* LOADING */
+    #loading { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
+
+    /* MAIN */
+    .main { padding: 20px; max-width: 960px; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* WEEK TOTALS */
+    .totals-bar { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; }
+    .totals-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; width: 100%; margin-bottom: -12px; }
+    .total-item { display: flex; flex-direction: column; gap: 2px; }
+    .total-num { font-family: 'Bebas Neue', sans-serif; font-size: 28px; line-height: 1; }
+    .total-lbl { font-size: 9px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+    .num-reg { color: #7dd3fc; }
+    .num-ot { color: var(--warning); }
+    .num-dt { color: var(--danger); }
+    .num-total { color: var(--accent); }
+    .totals-actions { margin-left: auto; display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-submit { background: linear-gradient(135deg,var(--accent),var(--purple)); border: none; color: #000; padding: 10px 24px; border-radius: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-submit:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-reopen { background: none; border: 1px solid var(--warning); color: var(--warning); padding: 10px 20px; border-radius: 8px; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; cursor: pointer; }
+
+    /* STATUS BANNER */
+    .status-banner { display: none; padding: 10px 16px; border-radius: 8px; font-size: 12px; margin-bottom: 16px; }
+    .status-banner.submitted { display: block; background: #0f2918; border: 1px solid #166534; color: var(--success); }
+    .status-banner.locked { display: block; background: #1c1505; border: 1px solid #854d0e; color: var(--warning); }
+
+    /* WEEK GRID */
+    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .day-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px; min-height: 100px; transition: border-color 0.2s; }
+    .day-card.today { border-color: #00e5ff44; }
+    .day-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+    .day-date { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+    .day-card.today .day-lbl { color: var(--accent); }
+    .day-card.today .day-date { color: #fff; }
+
+    .entry-row { background: #0f1929; border-left: 3px solid var(--accent); border-radius: 4px; padding: 7px 9px; margin-bottom: 6px; cursor: pointer; transition: background 0.15s; }
+    .entry-row:hover { background: #162033; }
+    .entry-row.locked-entry { border-left-color: var(--warning); cursor: default; }
+    .entry-job { font-size: 10px; color: var(--accent); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .entry-time { font-size: 11px; color: #94a3b8; }
+    .entry-pills { margin-top: 4px; display: flex; gap: 3px; flex-wrap: wrap; }
+    .pill { display: inline-block; padding: 1px 6px; border-radius: 99px; font-size: 9px; }
+    .pill-reg { background: #1e3a5f; color: #7dd3fc; }
+    .pill-ot { background: #3d2a00; color: var(--warning); }
+    .pill-dt { background: #3b0a0a; color: var(--danger); }
+
+    .btn-add { background: none; border: 1px dashed #1e3a5f; color: #4a6fa5; border-radius: 4px; padding: 5px; cursor: pointer; font-family: inherit; font-size: 11px; width: 100%; margin-top: 4px; transition: all 0.15s; }
+    .btn-add:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* MODAL */
+    .modal-bg { display: none; position: fixed; inset: 0; background: #000000cc; z-index: 100; align-items: center; justify-content: center; padding: 16px; }
+    .modal-bg.open { display: flex; }
+    .modal { background: #111827; border: 1px solid #1e3a5f; border-radius: 12px; padding: 24px; width: 100%; max-width: 420px; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
+    .form-grid { display: grid; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .form-label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px; padding: 8px 12px; outline: none; transition: border-color 0.2s; }
+    .form-input:focus { border-color: var(--accent); }
+    select.form-input option { background: #111827; }
+
+    .calc-preview { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; gap: 16px; }
+    .calc-num { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
+    .calc-lbl { font-size: 9px; color: var(--muted); margin-left: 3px; }
+
+    .modal-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
+    .btn-save { background: var(--accent); border: none; color: #000; padding: 10px 20px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; cursor: pointer; }
+    .btn-save:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-cancel { background: none; border: 1px solid var(--border); color: var(--muted); padding: 10px 20px; border-radius: 6px; font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; }
+    .btn-delete { background: none; border: none; color: #f8717166; cursor: pointer; font-size: 12px; padding: 0; }
+    .btn-delete:hover { color: var(--danger); }
+
+    @media(max-width:700px) {
+      .week-grid { grid-template-columns: repeat(4, 1fr); }
+      .form-row { grid-template-columns: 1fr 1fr; }
+      .totals-bar { gap: 12px; }
+    }
+    @media(max-width:480px) {
+      .week-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">LOADING...</div>
+
+  <nav class="topnav">
+    <a class="nav-back" href="index.html">← Hub</a>
+    <div class="nav-bar"></div>
+    <div>
+      <div class="nav-title">Time Entry</div>
+      <div class="nav-sub" id="nav-week-label">Week of —</div>
+    </div>
+    <div class="nav-right">Logged in as <span id="nav-name">—</span></div>
+  </nav>
+
+  <div class="main">
+    <div class="status-banner" id="status-banner"></div>
+
+    <!-- TOTALS -->
+    <div class="totals-bar">
+      <div class="totals-label">Week Totals</div>
+      <div class="total-item"><div class="total-num num-reg" id="tot-reg">0.0</div><div class="total-lbl">Reg Hrs</div></div>
+      <div class="total-item"><div class="total-num num-ot" id="tot-ot">0.0</div><div class="total-lbl">OT Hrs</div></div>
+      <div class="total-item"><div class="total-num num-dt" id="tot-dt">0.0</div><div class="total-lbl">DT Hrs</div></div>
+      <div class="total-item"><div class="total-num num-total" id="tot-total">0.0</div><div class="total-lbl">Total</div></div>
+      <div class="totals-actions">
+        <button class="btn-reopen" id="btn-reopen" style="display:none" onclick="reopenSheet()">↩ REOPEN</button>
+        <button class="btn-submit" id="btn-submit" onclick="submitSheet()">SUBMIT WEEK</button>
+      </div>
+    </div>
+
+    <!-- WEEK GRID -->
+    <div class="week-grid" id="week-grid"></div>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-bg" id="modal">
+    <div class="modal">
+      <div class="modal-title" id="modal-title">ADD TIME ENTRY</div>
+      <div class="form-grid">
+        <div>
+          <label class="form-label">Date</label>
+          <input class="form-input" type="date" id="f-date" />
+        </div>
+        <div>
+          <label class="form-label">Job</label>
+          <select class="form-input" id="f-job"></select>
+        </div>
+        <div class="form-row">
+          <div>
+            <label class="form-label">Start Time</label>
+            <input class="form-input" type="time" id="f-start" oninput="updateCalc()" />
+          </div>
+          <div>
+            <label class="form-label">End Time</label>
+            <input class="form-input" type="time" id="f-end" oninput="updateCalc()" />
+          </div>
+          <div>
+            <label class="form-label">Break (min)</label>
+            <input class="form-input" type="number" id="f-break" min="0" value="0" oninput="updateCalc()" />
+          </div>
+        </div>
+        <div class="calc-preview" id="calc-preview" style="display:none">
+          <div><span class="calc-num num-reg" id="c-reg">0</span><span class="calc-lbl">REG</span></div>
+          <div><span class="calc-num num-ot" id="c-ot">0</span><span class="calc-lbl">OT</span></div>
+          <div><span class="calc-num num-dt" id="c-dt">0</span><span class="calc-lbl">DT</span></div>
+          <div><span class="calc-num num-total" id="c-total">0</span><span class="calc-lbl">TOTAL</span></div>
+        </div>
+        <div>
+          <label class="form-label">Notes (optional)</label>
+          <input class="form-input" type="text" id="f-notes" placeholder="e.g. Load in, Show night..." />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-delete" id="btn-delete" style="display:none" onclick="deleteEntry()">🗑 Delete Entry</button>
+        <div style="display:flex;gap:10px;margin-left:auto">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+          <button class="btn-save" id="btn-save" onclick="saveEntry()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://xfpgbjxavymtfmfobecc.supabase.co';
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    let currentUser = null;
+    let jobs = [];
+    let entries = [];
+    let sheet = null;
+    let payRules = { ot_threshold: 8, dt_threshold: 12 };
+    let editingEntryId = null;
+    let weekDates = [];
+
+    const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    function getWeekDates(base) {
+      const d = new Date(base);
+      const day = d.getDay();
+      const monday = new Date(d);
+      monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+      return Array.from({ length: 7 }, (_, i) => {
+        const dd = new Date(monday);
+        dd.setDate(monday.getDate() + i);
+        return dd.toISOString().split('T')[0];
+      });
+    }
+
+    function calcHours(start, end, breakMins) {
+      if (!start || !end) return { regular: 0, ot: 0, dt: 0, total: 0 };
+      let [sh, sm] = start.split(':').map(Number);
+      let [eh, em] = end.split(':').map(Number);
+      let startM = sh * 60 + sm;
+      let endM = eh * 60 + em;
+      if (endM <= startM) endM += 24 * 60;
+      let total = Math.max((endM - startM - (breakMins || 0)) / 60, 0);
+      const ot_t = payRules.ot_threshold;
+      const dt_t = payRules.dt_threshold;
+      let regular = Math.min(total, ot_t);
+      let ot = Math.min(Math.max(total - ot_t, 0), dt_t - ot_t);
+      let dt = Math.max(total - dt_t, 0);
+      return { regular: +regular.toFixed(2), ot: +ot.toFixed(2), dt: +dt.toFixed(2), total: +total.toFixed(2) };
+    }
+
+    function updateCalc() {
+      const start = document.getElementById('f-start').value;
+      const end = document.getElementById('f-end').value;
+      const brk = parseInt(document.getElementById('f-break').value) || 0;
+      if (!start || !end) { document.getElementById('calc-preview').style.display = 'none'; return; }
+      const h = calcHours(start, end, brk);
+      document.getElementById('calc-preview').style.display = 'flex';
+      document.getElementById('c-reg').textContent = h.regular + 'h';
+      document.getElementById('c-ot').textContent = h.ot + 'h';
+      document.getElementById('c-dt').textContent = h.dt + 'h';
+      document.getElementById('c-total').textContent = h.total + 'h';
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('week-grid');
+      const today = new Date().toISOString().split('T')[0];
+      const isLocked = sheet?.status === 'locked';
+      const isSubmitted = sheet?.status === 'submitted';
+      const canEdit = !isLocked && !isSubmitted;
+
+      grid.innerHTML = '';
+      weekDates.forEach((date, i) => {
+        const dayEntries = entries.filter(e => e.entry_date === date);
+        const isToday = date === today;
+        const card = document.createElement('div');
+        card.className = 'day-card' + (isToday ? ' today' : '');
+        let html = `<div class="day-lbl">${DAYS[i]}</div><div class="day-date">${date.slice(5)}</div>`;
+        dayEntries.forEach(entry => {
+          const h = calcHours(entry.start_time, entry.end_time, entry.break_minutes);
+          const job = jobs.find(j => j.job_id === entry.job_id);
+          html += `<div class="entry-row${isLocked ? ' locked-entry' : ''}" onclick="${canEdit ? `openEdit(${entry.entry_id})` : ''}">
+            <div class="entry-job">${job?.job_name || '—'}</div>
+            <div class="entry-time">${entry.start_time?.slice(0,5)} – ${entry.end_time?.slice(0,5)}</div>
+            <div class="entry-pills">
+              ${h.regular > 0 ? `<span class="pill pill-reg">${h.regular}h</span>` : ''}
+              ${h.ot > 0 ? `<span class="pill pill-ot">OT ${h.ot}h</span>` : ''}
+              ${h.dt > 0 ? `<span class="pill pill-dt">DT ${h.dt}h</span>` : ''}
+            </div>
+          </div>`;
+        });
+        if (canEdit) {
+          html += `<button class="btn-add" onclick="openAdd('${date}')">+ Add</button>`;
+        }
+        card.innerHTML = html;
+        grid.appendChild(card);
+      });
+
+      // Totals
+      const totals = entries.filter(e => weekDates.includes(e.entry_date)).reduce((acc, e) => {
+        const h = calcHours(e.start_time, e.end_time, e.break_minutes);
+        acc.regular += h.regular; acc.ot += h.ot; acc.dt += h.dt; acc.total += h.total;
+        return acc;
+      }, { regular: 0, ot: 0, dt: 0, total: 0 });
+
+      document.getElementById('tot-reg').textContent = totals.regular.toFixed(1);
+      document.getElementById('tot-ot').textContent = totals.ot.toFixed(1);
+      document.getElementById('tot-dt').textContent = totals.dt.toFixed(1);
+      document.getElementById('tot-total').textContent = totals.total.toFixed(1);
+
+      // Submit / reopen buttons
+      const submitBtn = document.getElementById('btn-submit');
+      const reopenBtn = document.getElementById('btn-reopen');
+      const banner = document.getElementById('status-banner');
+
+      if (isLocked) {
+        submitBtn.style.display = 'none';
+        reopenBtn.style.display = 'none';
+        banner.className = 'status-banner locked';
+        banner.textContent = '🔒 This week has been locked by accounting. No further changes allowed.';
+      } else if (isSubmitted) {
+        submitBtn.style.display = 'none';
+        reopenBtn.style.display = 'block';
+        banner.className = 'status-banner submitted';
+        banner.textContent = '✓ Week submitted — accounting will review. You can reopen until it\'s locked.';
+      } else {
+        submitBtn.style.display = 'block';
+        submitBtn.disabled = entries.length === 0;
+        reopenBtn.style.display = 'none';
+        banner.className = 'status-banner';
+      }
+    }
+
+    function openAdd(date) {
+      editingEntryId = null;
+      document.getElementById('modal-title').textContent = 'ADD TIME ENTRY';
+      document.getElementById('f-date').value = date;
+      document.getElementById('f-job').value = '';
+      document.getElementById('f-start').value = '';
+      document.getElementById('f-end').value = '';
+      document.getElementById('f-break').value = '0';
+      document.getElementById('f-notes').value = '';
+      document.getElementById('calc-preview').style.display = 'none';
+      document.getElementById('btn-delete').style.display = 'none';
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function openEdit(entryId) {
+      const entry = entries.find(e => e.entry_id === entryId);
+      if (!entry) return;
+      editingEntryId = entryId;
+      document.getElementById('modal-title').textContent = 'EDIT TIME ENTRY';
+      document.getElementById('f-date').value = entry.entry_date;
+      document.getElementById('f-job').value = entry.job_id;
+      document.getElementById('f-start').value = entry.start_time?.slice(0,5);
+      document.getElementById('f-end').value = entry.end_time?.slice(0,5);
+      document.getElementById('f-break').value = entry.break_minutes || 0;
+      document.getElementById('f-notes').value = entry.notes || '';
+      document.getElementById('btn-delete').style.display = 'block';
+      updateCalc();
+      document.getElementById('modal').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('open');
+    }
+
+    async function saveEntry() {
+      const date = document.getElementById('f-date').value;
+      const jobId = parseInt(document.getElementById('f-job').value);
+      const start = document.getElementById('f-start').value;
+      const end = document.getElementById('f-end').value;
+      const brk = parseInt(document.getElementById('f-break').value) || 0;
+      const notes = document.getElementById('f-notes').value;
+      if (!date || !jobId || !start || !end) return;
+
+      const h = calcHours(start, end, brk);
+      const isOvernight = end <= start;
+
+      const payload = {
+        employee_id: currentUser.id,
+        job_id: jobId,
+        entry_date: date,
+        start_time: start,
+        end_time: end,
+        break_minutes: brk,
+        is_overnight: isOvernight,
+        total_hours: h.total,
+        regular_hours: h.regular,
+        ot_hours: h.ot,
+        dt_hours: h.dt,
+        notes: notes || null,
+      };
+
+      if (editingEntryId) {
+        await sb.from('time_entries').update(payload).eq('entry_id', editingEntryId);
+      } else {
+        await sb.from('time_entries').insert(payload);
+      }
+
+      closeModal();
+      await loadEntries();
+    }
+
+    async function deleteEntry() {
+      if (!editingEntryId) return;
+      await sb.from('time_entries').delete().eq('entry_id', editingEntryId);
+      closeModal();
+      await loadEntries();
+    }
+
+    async function submitSheet() {
+      const weekStart = weekDates[0];
+      const weekEnd = weekDates[6];
+      if (sheet) {
+        await sb.from('time_sheets').update({ status: 'submitted', submitted_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
+      } else {
+        await sb.from('time_sheets').insert({ employee_id: currentUser.id, week_start_date: weekStart, week_end_date: weekEnd, status: 'submitted', submitted_at: new Date().toISOString() });
+      }
+      await loadSheet();
+    }
+
+    async function reopenSheet() {
+      if (!sheet) return;
+      await sb.from('time_sheets').update({ status: 'open', reopened_at: new Date().toISOString() }).eq('sheet_id', sheet.sheet_id);
+      await loadSheet();
+    }
+
+    async function loadEntries() {
+      const { data } = await sb.from('time_entries')
+        .select('*')
+        .eq('employee_id', currentUser.id)
+        .gte('entry_date', weekDates[0])
+        .lte('entry_date', weekDates[6]);
+      entries = data || [];
+      renderGrid();
+    }
+
+    async function loadSheet() {
+      const { data } = await sb.from('time_sheets')
+        .select('*')
+        .eq('employee_id', currentUser.id)
+        .eq('week_start_date', weekDates[0])
+        .single();
+      sheet = data || null;
+      renderGrid();
+    }
+
+    async function init() {
+      const { data: { session } } = await sb.auth.getSession();
+      if (!session) { window.location.href = 'index.html'; return; }
+      currentUser = session.user;
+
+      // Load pay rules
+      const { data: rules } = await sb.from('pay_rules').select('*').single();
+      if (rules) payRules = rules;
+
+      // Week dates
+      weekDates = getWeekDates(new Date());
+      document.getElementById('nav-week-label').textContent = `Week of ${weekDates[0]}`;
+
+      // Load employee name
+      const { data: emp } = await sb.from('employees').select('first_name, last_name').eq('employee_id', currentUser.id).single();
+      if (emp) document.getElementById('nav-name').textContent = `${emp.first_name} ${emp.last_name}`;
+
+      // Load jobs
+      const { data: jobData } = await sb.from('jobs').select('job_id, job_name, status').in('status', ['booked', 'completed']).order('job_name');
+      jobs = jobData || [];
+
+      // Populate job dropdown
+      const sel = document.getElementById('f-job');
+      sel.innerHTML = '<option value="">— Select a Job —</option>';
+      jobs.forEach(j => {
+        const opt = document.createElement('option');
+        opt.value = j.job_id;
+        opt.textContent = j.job_name;
+        sel.appendChild(opt);
+      });
+
+      await loadEntries();
+      await loadSheet();
+
+      document.getElementById('loading').style.display = 'none';
+    }
+
+    // Close modal on bg click
+    document.getElementById('modal').addEventListener('click', e => {
+      if (e.target === document.getElementById('modal')) closeModal();
+    });
+
+    init();
+  </script>
+</body>
+</html>
