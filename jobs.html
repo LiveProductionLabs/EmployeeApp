@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jobs — Live Production Labs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAGfUlEQVR4nLWXWWxc5RXHf9/d5o493ma8xk6cxImTEJo2KxQiBWgQYmmrFkQqRSqNUFX1gb41UvtE1EqgPiCU1lULUdWULoohlCBaklBTGtc4gdiBOLYTrzPel/HMePbl3vv1YXCCm0Btl/yf7r36zjm/75zz3XuukFJKvgAl4w6qJnCZC0/Ekuy0lQYMOxYO4FM07JzkxEsOiZiCpwjWNjrse1RDLIFBWSlAq5PgiewILzqzXB3MMelXicwpBAYUKmqUJQWH/yMDM9JiEpt/kaT2UgmOI3AkbNvjsHXn0ve1YoBpaSMEfDlqEurVkQKKiyX7H1vi1j/RikswKy1MDWr73UTCAiFhx4MO8XLn9gM4SGawqJYa6kcmmRw0bJD0787yTCzNT+JJRm379gGkpENI2KwLmsQHdDxuKHo4yxnFJu1Ao6ZSpaq3B0BKSVpAwnCo7naTCAvW32vxj3qLRE5w0NQ5ZLowluhvWU3oOJJDP/sAd6nO9se91Pg9UAcD+7L05STfMw2edC019AoAFEWQTNv84c1x1l+aIVMX5pFH1nLV6+b70uBb2vIP1bIsgpE0Fz4OU3XQS328kp53bf7mb2f/uQo2H2iEdSXLBlhWD7x8aojRmRSeap1NwxVUf7scsbOEPzX7ee29iWUHh2VkIDSfpunVIdRag4pEIdJQ6S+aZOzYNH987i4OPrRmRQBLzkDTyQHGAyk8GwxqJ0oIbJ6n9xU/exrKOLC/bkXBlwzw59PDPP/7fnCrKGFIRCw6OofIDmU4/FQjmpp30941QzaXfxPGkjk6r84RT+Y4fyUIwAfds6QyFi0Xp2h+J0Db5dnPB3AchyPHLvPdI50kEzYIiPSmONtyhdnzYfbsquDre2uur+8NxLHs/HiRStv0jcYpcGt0Dc4zOZekxx/DNFT6R+MUF2rUVbo/GyAcy3Dwp+08++tr2Dasf2wNq75agbQdpAU48J0H6zC0Gy6klKQzFpbt5OcRCYoQ7N5SxtETfeza4kMIAQhchoqiiFs34VV/hKee/ZAu1Ub1GWhCZdsPNxMZiTJxYSa/SBGsrixYZFdXUcDZ9ye5o7GMjXWFbFpbBMCdDaX0jcbZsrYYgE1rPARDGVASNwOcOT/O00c6GLcku09uZfAXfsyIC8Nr4MsVU1bmIRyK5xn+K38P3V2z6H57oxcATVV48ms3Tsn9O6uuXy8C+NWr1zh8tIfUvEX5o+VoxRqlD5TgjZRg6xLfjMkOczUtshuEgvopAMt2+GfHFNU+N5VlJrqmEIllyFoO9dUe4imLufk0Ukq8xSaqAjlL5gFSGYsfH/2IpmY/qAquVSZVj1fg5By+ZNZS4S0lNuHga9OprmqgJzrJ5HwIVbkxfGSyNr3+eUankwBE41myloOhqxS4NQQSRQgkkEznP9WFbh1tZCrOD57v4HTrDBgqeoHKmmdWUbSzkNXnCth+qhLVEmTdDlpSQSvQOLBhF8e72/j04Ge6NJ7+xkYMTSGRtkhlbGxbomuCVMbGdKloisCRkpwlKTBVVFVBO/Tzi7zbNosoyFfDSjoMvzCKXq4zsleSc01RHS8jWSdZ94YLOZLjr0OdRDJJdO0GgKoICs28j1KPQalncX9kczZSgsvIzwmpjIWhqyjbNpaimCoyk1+AAlbYZvbvIVRV4VIwQGdmjPhmCN5j0zreTyAaRCpiUQkA3vr3GOlsPr2ZnM1zx7tJpCxmwymOnRrkzdYxPuyZo71rltffG+Ni7xzKCz/6Ci1Ne/nmA6vQFZAZGzRBrCtBLm4ROh1hujWIbgmmqpJ0xEdAqMDNAMFo7pNzDheuzFLq0Xm/K4gjIZ62yeYkozNJJPn3Q3GhgSYE3Lejkvt2VNLeFeToiUHeODdJOpDi6uFBEj0pZKnETjlM+INEY0nQVEDeBJDJWAyPxSgp1rnQHaKhppBL18LUVZp43Cob6jx0DUW5a6sXAZxoCSBu9WvWeS3ML5sHaT4zRjKZA12h8Yl6Qv1Rgh+HQVVASlp/u4+923zX7S4PRJgOpqjwmVR5TWp8bqZDKQB6/VEA7lhXgm1Luofnqa8pvDXAgq4MzdP02iB/OTvG/HQKTA1hKPleQdL20j7uudP3WeZL0ucCLKhvNMZvTg7xytsjBIPp6yVo/9393L3Ve/sBFhSYSvDyqWGOvzVCWZmLd168lyqv+b8NvyiABc2E02iagrdoeRPwrfQfaK/eBmFKYzQAAAAASUVORK5CYII=" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #1e2a3a; --surface: #263447; --surface2: #2f3f55;
+      --border: #3a5068; --accent: #38bdf8; --accent2: #818cf8;
+      --text: #f0f4f8; --text2: #94a3b8;
+      --success: #4ade80; --warning: #fbbf24; --danger: #f87171;
+    }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
+
+    #loading { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
+
+    .topnav { background: #182230; border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; height: 56px; gap: 12px; position: sticky; top: 0; z-index: 50; }
+    .nav-back { background: none; border: 1px solid var(--border); color: var(--text2); font-family: 'DM Mono', monospace; font-size: 11px; padding: 6px 12px; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .nav-back:hover { border-color: var(--accent); color: var(--accent); }
+    .nav-bar { width: 5px; height: 32px; background: linear-gradient(180deg,var(--accent),var(--accent2)); border-radius: 3px; }
+    .nav-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; }
+
+    /* TABS */
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); background: #182230; padding: 0 20px; }
+    .tab { font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 14px 20px; cursor: pointer; color: var(--text2); border-bottom: 3px solid transparent; transition: all 0.2s; }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+    .main { padding: 20px; max-width: 700px; margin: 0 auto; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* FORMS */
+    .form-field { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .form-input { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 14px; padding: 10px 14px; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
+    .form-input:focus { border-color: var(--accent); }
+    select.form-input option { background: #1e2e42; }
+    textarea.form-input { resize: vertical; min-height: 70px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+    /* BUTTONS */
+    .btn-primary { background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; border-radius: 10px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; padding: 14px 24px; cursor: pointer; transition: opacity 0.2s; }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); border-radius: 10px; color: var(--text2); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px 20px; cursor: pointer; }
+    .btn-danger { background: transparent; border: 1px solid var(--danger); border-radius: 10px; color: var(--danger); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px 20px; cursor: pointer; }
+    .btn-success { background: transparent; border: 1px solid var(--success); border-radius: 10px; color: var(--success); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 10px 20px; cursor: pointer; }
+    .btn-row { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+    .btn-full { width: 100%; }
+
+    /* SECTION HEADER */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; color: var(--accent); }
+    .btn-add { background: linear-gradient(135deg,var(--accent),var(--accent2)); border: none; border-radius: 8px; color: #fff; font-family: 'Bebas Neue', sans-serif; font-size: 14px; letter-spacing: 2px; padding: 8px 16px; cursor: pointer; }
+
+    /* CARDS */
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: border-color 0.2s; }
+    .card:hover { border-color: var(--accent); }
+    .card-title { font-size: 15px; color: var(--text); margin-bottom: 4px; }
+    .card-meta { font-size: 11px; color: var(--text2); margin-bottom: 6px; }
+    .card-footer { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+    /* STATUS BADGES */
+    .badge { font-size: 10px; padding: 3px 10px; border-radius: 99px; font-family: 'DM Mono', monospace; }
+    .badge-booked    { background: #1e3a5f; color: #7dd3fc; }
+    .badge-confirmed { background: #1a3a1a; color: var(--success); }
+    .badge-completed { background: #2a2a2a; color: #94a3b8; }
+    .badge-cancelled { background: #3b0a0a66; color: var(--danger); }
+    .badge-pending   { background: #3d2a00; color: var(--warning); }
+
+    /* MESSAGES */
+    .msg { padding: 10px 14px; border-radius: 8px; font-size: 12px; margin-top: 12px; display: none; }
+    .msg-success { background: #0f291866; border: 1px solid #166534; color: var(--success); }
+    .msg-error   { background: #3b0a0a66; border: 1px solid #7f1d1d; color: var(--danger); }
+
+    .empty-state { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 12px; }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200; display: none; align-items: flex-start; justify-content: center; padding: 20px; overflow-y: auto; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 24px; width: 100%; max-width: 560px; margin: auto; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--accent); margin-bottom: 20px; }
+    .modal-section { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 10px; border-top: 1px solid var(--border); padding-top: 12px; }
+
+    /* CREW CHECKBOXES */
+    .crew-list { display: flex; flex-direction: column; gap: 8px; }
+    .crew-item { display: flex; align-items: center; gap: 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; cursor: pointer; transition: border-color 0.2s; }
+    .crew-item:hover { border-color: var(--accent); }
+    .crew-item input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
+    .crew-item label { cursor: pointer; font-size: 13px; flex: 1; }
+
+    .inactive-dim { opacity: 0.5; }
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  </style>
+</head>
+<body>
+<div id="loading">LOADING...</div>
+
+<nav class="topnav">
+  <a class="nav-back" href="index.html">← Hub</a>
+  <div class="nav-bar"></div>
+  <div class="nav-title">Jobs</div>
+</nav>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('jobs')">Jobs</div>
+  <div class="tab" onclick="switchTab('clients')">Clients</div>
+</div>
+
+<div class="main">
+
+  <!-- JOBS TAB -->
+  <div class="tab-panel active" id="tab-jobs">
+    <div class="section-header">
+      <div class="section-title">All Jobs</div>
+      <button class="btn-add" onclick="openJobModal()">+ New Job</button>
+    </div>
+
+    <!-- Filter bar -->
+    <div style="margin-bottom:16px;">
+      <select class="form-input" id="status-filter" onchange="renderJobs()" style="max-width:200px;">
+        <option value="">All Statuses</option>
+        <option value="booked">Booked</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+    </div>
+
+    <div id="jobs-list"><div class="empty-state">Loading jobs...</div></div>
+  </div>
+
+  <!-- CLIENTS TAB -->
+  <div class="tab-panel" id="tab-clients">
+    <div class="section-header">
+      <div class="section-title">Clients</div>
+      <button class="btn-add" onclick="openClientModal()">+ New Client</button>
+    </div>
+    <div id="clients-list"><div class="empty-state">Loading clients...</div></div>
+  </div>
+
+</div>
+
+<!-- JOB MODAL -->
+<div class="modal-overlay" id="job-modal">
+  <div class="modal">
+    <div class="modal-title" id="job-modal-title">New Job</div>
+
+    <div class="form-field"><label class="form-label">Job Name <span style="color:var(--danger)">*</span></label><input class="form-input" id="j-name" placeholder="e.g. Brooklyn Wedding Expo" /></div>
+
+    <div class="two-col">
+      <div class="form-field"><label class="form-label">Client</label>
+        <select class="form-input" id="j-client"><option value="">— Select Client —</option></select>
+      </div>
+      <div class="form-field"><label class="form-label">Status</label>
+        <select class="form-input" id="j-status">
+          <option value="booked">Booked</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="completed">Completed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="form-field"><label class="form-label">Job Type</label><input class="form-input" id="j-type" placeholder="e.g. Wedding, Corporate" /></div>
+      <div class="form-field"><label class="form-label">Start Date</label><input class="form-input" id="j-start" type="date" /></div>
+    </div>
+    <div class="form-field"><label class="form-label">End Date <span style="color:var(--text2);font-size:9px">if multi-day</span></label><input class="form-input" id="j-end" type="date" /></div>
+
+    <div class="modal-section">Location</div>
+    <div class="form-field"><label class="form-label">Address / Venue</label><input class="form-input" id="j-location" placeholder="123 Main St, Brooklyn NY" /></div>
+    <div class="form-field"><label class="form-label">Google Maps URL</label><input class="form-input" id="j-maps" placeholder="https://maps.google.com/..." /></div>
+    <div class="form-field"><label class="form-label">Location Notes</label><textarea class="form-input" id="j-loc-notes" placeholder="Parking info, entrance details..."></textarea></div>
+    <div class="form-field"><label class="form-label">Driver Notes</label><textarea class="form-input" id="j-driver" placeholder="Load in instructions, truck access..."></textarea></div>
+
+    <div class="modal-section">Site Contact</div>
+    <div class="two-col">
+      <div class="form-field"><label class="form-label">Contact Name</label><input class="form-input" id="j-site-name" /></div>
+      <div class="form-field"><label class="form-label">Contact Phone</label><input class="form-input" id="j-site-phone" /></div>
+    </div>
+
+    <div class="modal-section">Pay Rate Overrides <span style="color:var(--text2);font-size:9px;font-family:'DM Mono'">(leave blank to use employee defaults)</span></div>
+    <div class="three-col">
+      <div class="form-field"><label class="form-label">Base / hr</label><input class="form-input" id="j-base" type="number" step="0.01" /></div>
+      <div class="form-field"><label class="form-label">OT / hr</label><input class="form-input" id="j-ot" type="number" step="0.01" /></div>
+      <div class="form-field"><label class="form-label">DT / hr</label><input class="form-input" id="j-dt" type="number" step="0.01" /></div>
+    </div>
+
+    <div class="modal-section">Assign Crew</div>
+    <div class="crew-list" id="crew-checkboxes"><div style="color:var(--text2);font-size:12px;">Loading...</div></div>
+
+    <div class="form-field" style="margin-top:16px;"><label class="form-label">Notes</label><textarea class="form-input" id="j-notes" placeholder="Internal notes..."></textarea></div>
+
+    <div class="msg msg-error" id="job-error"></div>
+    <div class="msg msg-success" id="job-success"></div>
+    <div class="btn-row">
+      <button class="btn-primary btn-full" onclick="saveJob()">SAVE JOB</button>
+      <button class="btn-danger btn-full" id="btn-cancel-job" style="display:none" onclick="cancelJob()">CANCEL JOB</button>
+      <button class="btn-outline btn-full" onclick="closeJobModal()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT MODAL -->
+<div class="modal-overlay" id="client-modal">
+  <div class="modal">
+    <div class="modal-title" id="client-modal-title">New Client</div>
+
+    <div class="form-field"><label class="form-label">Company Name <span style="color:var(--danger)">*</span></label><input class="form-input" id="c-company" placeholder="Acme Events LLC" /></div>
+    <div class="two-col">
+      <div class="form-field"><label class="form-label">Contact Name</label><input class="form-input" id="c-contact" /></div>
+      <div class="form-field"><label class="form-label">Phone</label><input class="form-input" id="c-phone" /></div>
+    </div>
+    <div class="form-field"><label class="form-label">Email</label><input class="form-input" id="c-email" type="email" /></div>
+    <div class="form-field"><label class="form-label">Notes</label><textarea class="form-input" id="c-notes"></textarea></div>
+
+    <!-- Job history shown when editing -->
+    <div id="client-history" style="display:none;">
+      <div class="modal-section">Job History</div>
+      <div id="client-jobs-list"></div>
+    </div>
+
+    <div class="msg msg-error" id="client-error"></div>
+    <div class="msg msg-success" id="client-success"></div>
+    <div class="btn-row">
+      <button class="btn-primary btn-full" onclick="saveClient()">SAVE CLIENT</button>
+      <button class="btn-danger btn-full" id="btn-deactivate-client" style="display:none" onclick="deactivateClient()">DEACTIVATE CLIENT</button>
+      <button class="btn-outline btn-full" onclick="closeClientModal()">CLOSE</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL  = 'https://xfpgbjxavymtfmfobecc.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmcGdianhhdnltdGZtZm9iZWNjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxMTkzODgsImV4cCI6MjA4ODY5NTM4OH0.cDc9jrafj6PnpDE7OTcgujKrHjb5NMdQWPi7EmFMomY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+let currentUser = null;
+let allJobs = [];
+let allClients = [];
+let allEmployees = [];
+let editingJob = null;
+let editingClient = null;
+
+// ─── TABS ────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector(`.tab[onclick="switchTab('${name}')"]`).classList.add('active');
+  document.getElementById(`tab-${name}`).classList.add('active');
+}
+
+// ─── LOAD DATA ───────────────────────────────────────────
+async function loadAll() {
+  const [jobsRes, clientsRes, empRes] = await Promise.all([
+    sb.from('jobs').select('*').order('start_date', { ascending: false }),
+    sb.from('clients').select('*').order('company_name'),
+    sb.from('employees').select('employee_id, first_name, last_name, is_active').order('first_name'),
+  ]);
+  allJobs     = jobsRes.data || [];
+  allClients  = clientsRes.data || [];
+  allEmployees = empRes.data || [];
+  renderJobs();
+  renderClients();
+}
+
+// ─── JOBS ────────────────────────────────────────────────
+function renderJobs() {
+  const filter = document.getElementById('status-filter').value;
+  const jobs = filter ? allJobs.filter(j => j.status === filter) : allJobs;
+  const el = document.getElementById('jobs-list');
+  if (!jobs.length) { el.innerHTML = '<div class="empty-state">No jobs yet. Hit + New Job to get started.</div>'; return; }
+
+  el.innerHTML = jobs.map(j => {
+    const client = allClients.find(c => c.client_id === j.client_id);
+    const dateStr = j.start_date ? new Date(j.start_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : 'No date';
+    return `<div class="card" onclick="openJobModal(${j.job_id})">
+      <div class="card-title">${j.job_name}</div>
+      <div class="card-meta">${client ? client.company_name + ' · ' : ''}${dateStr}${j.location ? ' · ' + j.location : ''}</div>
+      <div class="card-footer">
+        <span class="badge badge-${j.status}">${j.status}</span>
+        ${j.job_type ? `<span style="font-size:11px;color:var(--text2)">${j.job_type}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function openJobModal(jobId = null) {
+  editingJob = null;
+  document.getElementById('job-modal-title').textContent = jobId ? 'Edit Job' : 'New Job';
+  document.getElementById('btn-cancel-job').style.display = 'none';
+  clearMsg('job');
+
+  // Populate client dropdown
+  const sel = document.getElementById('j-client');
+  sel.innerHTML = '<option value="">— Select Client —</option>' +
+    allClients.filter(c => c.is_active).map(c => `<option value="${c.client_id}">${c.company_name}</option>`).join('');
+
+  // Populate crew checkboxes
+  const crewDiv = document.getElementById('crew-checkboxes');
+  const activeEmp = allEmployees.filter(e => e.is_active);
+  crewDiv.innerHTML = activeEmp.map(e =>
+    `<div class="crew-item">
+      <input type="checkbox" id="crew-${e.employee_id}" value="${e.employee_id}" />
+      <label for="crew-${e.employee_id}">${e.first_name} ${e.last_name}</label>
+    </div>`
+  ).join('');
+
+  // Reset fields
+  ['j-name','j-type','j-location','j-maps','j-loc-notes','j-driver','j-site-name','j-site-phone','j-base','j-ot','j-dt','j-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('j-start').value = '';
+  document.getElementById('j-end').value = '';
+  document.getElementById('j-status').value = 'booked';
+  document.getElementById('j-client').value = '';
+
+  if (jobId) {
+    const job = allJobs.find(j => j.job_id === jobId);
+    if (!job) return;
+    editingJob = job;
+    document.getElementById('j-name').value       = job.job_name || '';
+    document.getElementById('j-client').value     = job.client_id || '';
+    document.getElementById('j-status').value     = job.status || 'booked';
+    document.getElementById('j-type').value       = job.job_type || '';
+    document.getElementById('j-start').value      = job.start_date || '';
+    document.getElementById('j-end').value        = job.end_date || '';
+    document.getElementById('j-location').value   = job.location || '';
+    document.getElementById('j-maps').value       = job.maps_url || '';
+    document.getElementById('j-loc-notes').value  = job.location_notes || '';
+    document.getElementById('j-driver').value     = job.driver_notes || '';
+    document.getElementById('j-site-name').value  = job.site_contact_name || '';
+    document.getElementById('j-site-phone').value = job.site_contact_phone || '';
+    document.getElementById('j-base').value       = job.base_rate_override || '';
+    document.getElementById('j-ot').value         = job.ot_rate_override || '';
+    document.getElementById('j-dt').value         = job.dt_rate_override || '';
+    document.getElementById('j-notes').value      = job.notes || '';
+
+    if (job.status !== 'cancelled') document.getElementById('btn-cancel-job').style.display = 'block';
+
+    // Load crew assignments
+    const { data: crew } = await sb.from('job_crew').select('employee_id').eq('job_id', jobId);
+    (crew || []).forEach(c => {
+      const cb = document.getElementById(`crew-${c.employee_id}`);
+      if (cb) cb.checked = true;
+    });
+  }
+
+  document.getElementById('job-modal').classList.add('open');
+}
+
+async function saveJob() {
+  const name = document.getElementById('j-name').value.trim();
+  if (!name) { showMsg('job', 'error', 'Job name is required.'); return; }
+
+  const payload = {
+    job_name:           name,
+    client_id:          document.getElementById('j-client').value || null,
+    status:             document.getElementById('j-status').value,
+    job_type:           document.getElementById('j-type').value.trim() || null,
+    start_date:         document.getElementById('j-start').value || null,
+    end_date:           document.getElementById('j-end').value || null,
+    location:           document.getElementById('j-location').value.trim() || null,
+    maps_url:           document.getElementById('j-maps').value.trim() || null,
+    location_notes:     document.getElementById('j-loc-notes').value.trim() || null,
+    driver_notes:       document.getElementById('j-driver').value.trim() || null,
+    site_contact_name:  document.getElementById('j-site-name').value.trim() || null,
+    site_contact_phone: document.getElementById('j-site-phone').value.trim() || null,
+    base_rate_override: parseFloat(document.getElementById('j-base').value) || null,
+    ot_rate_override:   parseFloat(document.getElementById('j-ot').value) || null,
+    dt_rate_override:   parseFloat(document.getElementById('j-dt').value) || null,
+    notes:              document.getElementById('j-notes').value.trim() || null,
+    created_by:         currentUser.id,
+  };
+
+  let jobId;
+  if (editingJob) {
+    const { error } = await sb.from('jobs').update(payload).eq('job_id', editingJob.job_id);
+    if (error) { showMsg('job', 'error', error.message); return; }
+    jobId = editingJob.job_id;
+  } else {
+    const { data, error } = await sb.from('jobs').insert(payload).select().single();
+    if (error) { showMsg('job', 'error', error.message); return; }
+    jobId = data.job_id;
+  }
+
+  // Save crew assignments
+  const checked = [...document.querySelectorAll('#crew-checkboxes input:checked')].map(cb => cb.value);
+  await sb.from('job_crew').delete().eq('job_id', jobId);
+  if (checked.length) {
+    await sb.from('job_crew').insert(checked.map(emp_id => ({ job_id: jobId, employee_id: emp_id, assigned_by: currentUser.id })));
+  }
+
+  showMsg('job', 'success', 'Saved!');
+  await loadAll();
+  setTimeout(closeJobModal, 800);
+}
+
+async function cancelJob() {
+  if (!editingJob) return;
+  await sb.from('jobs').update({ status: 'cancelled' }).eq('job_id', editingJob.job_id);
+  await loadAll();
+  closeJobModal();
+}
+
+function closeJobModal() { document.getElementById('job-modal').classList.remove('open'); editingJob = null; }
+
+// ─── CLIENTS ─────────────────────────────────────────────
+function renderClients() {
+  const el = document.getElementById('clients-list');
+  if (!allClients.length) { el.innerHTML = '<div class="empty-state">No clients yet.</div>'; return; }
+  el.innerHTML = allClients.map(c => {
+    const jobCount = allJobs.filter(j => j.client_id === c.client_id).length;
+    return `<div class="card ${c.is_active ? '' : 'inactive-dim'}" onclick="openClientModal(${c.client_id})">
+      <div class="card-title">${c.company_name} ${!c.is_active ? '<span style="color:var(--text2);font-size:11px">(inactive)</span>' : ''}</div>
+      <div class="card-meta">${c.contact_name || ''}${c.contact_phone ? ' · ' + c.contact_phone : ''}${c.contact_email ? ' · ' + c.contact_email : ''}</div>
+      <div class="card-footer"><span style="font-size:11px;color:var(--text2)">${jobCount} job${jobCount !== 1 ? 's' : ''}</span></div>
+    </div>`;
+  }).join('');
+}
+
+async function openClientModal(clientId = null) {
+  editingClient = null;
+  clearMsg('client');
+  document.getElementById('client-modal-title').textContent = clientId ? 'Edit Client' : 'New Client';
+  document.getElementById('btn-deactivate-client').style.display = 'none';
+  document.getElementById('client-history').style.display = 'none';
+  ['c-company','c-contact','c-phone','c-email','c-notes'].forEach(id => document.getElementById(id).value = '');
+
+  if (clientId) {
+    const c = allClients.find(cl => cl.client_id === clientId);
+    if (!c) return;
+    editingClient = c;
+    document.getElementById('c-company').value = c.company_name || '';
+    document.getElementById('c-contact').value = c.contact_name || '';
+    document.getElementById('c-phone').value   = c.contact_phone || '';
+    document.getElementById('c-email').value   = c.contact_email || '';
+    document.getElementById('c-notes').value   = c.notes || '';
+
+    // Toggle button
+    const btn = document.getElementById('btn-deactivate-client');
+    btn.style.display = 'block';
+    btn.textContent = c.is_active ? 'DEACTIVATE CLIENT' : 'REACTIVATE CLIENT';
+    btn.className = c.is_active ? 'btn-danger btn-full' : 'btn-success btn-full';
+
+    // Job history
+    const clientJobs = allJobs.filter(j => j.client_id === clientId);
+    if (clientJobs.length) {
+      document.getElementById('client-history').style.display = 'block';
+      document.getElementById('client-jobs-list').innerHTML = clientJobs.map(j => {
+        const dateStr = j.start_date ? new Date(j.start_date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}) : '';
+        return `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;">
+          <div style="font-size:13px">${j.job_name}</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">${dateStr} <span class="badge badge-${j.status}">${j.status}</span></div>
+        </div>`;
+      }).join('');
+    }
+  }
+
+  document.getElementById('client-modal').classList.add('open');
+}
+
+async function saveClient() {
+  const company = document.getElementById('c-company').value.trim();
+  if (!company) { showMsg('client', 'error', 'Company name is required.'); return; }
+
+  const payload = {
+    company_name:  company,
+    contact_name:  document.getElementById('c-contact').value.trim() || null,
+    contact_phone: document.getElementById('c-phone').value.trim() || null,
+    contact_email: document.getElementById('c-email').value.trim() || null,
+    notes:         document.getElementById('c-notes').value.trim() || null,
+    created_by:    currentUser.id,
+  };
+
+  if (editingClient) {
+    const { error } = await sb.from('clients').update(payload).eq('client_id', editingClient.client_id);
+    if (error) { showMsg('client', 'error', error.message); return; }
+  } else {
+    const { error } = await sb.from('clients').insert(payload);
+    if (error) { showMsg('client', 'error', error.message); return; }
+  }
+
+  showMsg('client', 'success', 'Saved!');
+  await loadAll();
+  setTimeout(closeClientModal, 800);
+}
+
+async function deactivateClient() {
+  if (!editingClient) return;
+  await sb.from('clients').update({ is_active: !editingClient.is_active }).eq('client_id', editingClient.client_id);
+  await loadAll();
+  closeClientModal();
+}
+
+function closeClientModal() { document.getElementById('client-modal').classList.remove('open'); editingClient = null; }
+
+// ─── HELPERS ─────────────────────────────────────────────
+function showMsg(prefix, type, text) {
+  const el = document.getElementById(`${prefix}-${type}`);
+  el.textContent = text;
+  el.style.display = 'block';
+}
+function clearMsg(prefix) {
+  ['error','success'].forEach(t => { const el = document.getElementById(`${prefix}-${t}`); if(el){el.style.display='none'; el.textContent='';} });
+}
+
+// ─── INIT ─────────────────────────────────────────────────
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentUser = session.user;
+
+  const { data: perms } = await sb.from('employee_permissions')
+    .select('permissions(permission_name)').eq('employee_id', currentUser.id);
+  const roles = perms?.map(p => p.permissions?.permission_name) || [];
+  if (!roles.includes('owner')) { window.location.href = 'index.html'; return; }
+
+  await loadAll();
+  document.getElementById('loading').style.display = 'none';
+}
+init();
+</script>
+</body>
+</html>
