@@ -14,7 +14,7 @@
       --text: #f0f4f8; --text2: #94a3b8;
       --success: #4ade80; --warning: #fbbf24; --danger: #f87171;
     }
-    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; overscroll-behavior: none; }
+    body { background: var(--bg); color: var(--text); font-family: 'DM Mono', monospace; min-height: 100vh; }
 
     #loading { position: fixed; inset: 0; background: var(--bg); z-index: 100; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 4px; color: var(--accent); }
 
@@ -78,19 +78,24 @@
     .form-input:focus { border-color: var(--accent); }
     select.form-input option { background: #1e2e42; }
 
-    /* DRUM PICKERS */
+    /* TAP TIME PICKER */
     .pickers-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .picker-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+    .tap-picker { background: var(--bg); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .tap-row { display: flex; align-items: center; }
 
-    .drum { position: relative; height: 192px; overflow: hidden; background: var(--bg); border: 1px solid var(--border); border-radius: 12px; touch-action: none; -webkit-user-select: none; user-select: none; }
-    .drum-track { position: absolute; top: 0; left: 0; right: 0; will-change: transform; }
-    .drum-item { height: 48px; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 2px; color: var(--text2); transition: color 0.12s; }
-    .drum-item.sel { color: var(--text); font-size: 26px; }
+    /* Hour & Minute columns */
+    .tap-col { flex: 1; display: flex; flex-direction: column; align-items: center; }
+    .tap-col + .tap-col { border-left: 1px solid var(--border); }
 
-    /* highlight band */
-    .drum::after { content: ''; position: absolute; top: 50%; left: 8px; right: 8px; height: 48px; transform: translateY(-50%); border-top: 2px solid var(--accent); border-bottom: 2px solid var(--accent); border-radius: 4px; pointer-events: none; z-index: 2; }
-    /* fade */
-    .drum::before { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, #1e2e42 0%, transparent 30%, transparent 70%, #1e2e42 100%); pointer-events: none; z-index: 3; }
+    .tap-col-label { font-size: 9px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; padding: 8px 0 4px; }
+
+    .tap-btn { width: 100%; padding: 12px 0; background: none; border: none; color: var(--accent); font-size: 22px; cursor: pointer; transition: background 0.15s; line-height: 1; }
+    .tap-btn:active { background: #38bdf822; }
+
+    .tap-val { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--text); letter-spacing: 2px; padding: 6px 0; min-width: 52px; text-align: center; line-height: 1; }
+
+    .tap-sep { font-family: 'Bebas Neue', sans-serif; font-size: 32px; color: var(--text2); padding: 0 2px; align-self: center; margin-top: 28px; }
 
     /* CALC */
     .calc-row { display: flex; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
@@ -142,14 +147,47 @@
     <select class="form-input" id="f-job"></select>
   </div>
 
+  <!-- TIME PICKERS -->
   <div class="pickers-row">
     <div>
       <span class="picker-label">Start Time</span>
-      <div class="drum" id="drum-s"><div class="drum-track" id="track-s"></div></div>
+      <div class="tap-picker">
+        <div class="tap-row">
+          <div class="tap-col">
+            <div class="tap-col-label">HR</div>
+            <button class="tap-btn" onclick="adj('sh',1)">▲</button>
+            <div class="tap-val" id="sh-val">08</div>
+            <button class="tap-btn" onclick="adj('sh',-1)">▼</button>
+          </div>
+          <div class="tap-sep">:</div>
+          <div class="tap-col">
+            <div class="tap-col-label">MIN</div>
+            <button class="tap-btn" onclick="adj('sm',1)">▲</button>
+            <div class="tap-val" id="sm-val">00</div>
+            <button class="tap-btn" onclick="adj('sm',-1)">▼</button>
+          </div>
+        </div>
+      </div>
     </div>
     <div>
       <span class="picker-label">End Time</span>
-      <div class="drum" id="drum-e"><div class="drum-track" id="track-e"></div></div>
+      <div class="tap-picker">
+        <div class="tap-row">
+          <div class="tap-col">
+            <div class="tap-col-label">HR</div>
+            <button class="tap-btn" onclick="adj('eh',1)">▲</button>
+            <div class="tap-val" id="eh-val">17</div>
+            <button class="tap-btn" onclick="adj('eh',-1)">▼</button>
+          </div>
+          <div class="tap-sep">:</div>
+          <div class="tap-col">
+            <div class="tap-col-label">MIN</div>
+            <button class="tap-btn" onclick="adj('em',1)">▲</button>
+            <div class="tap-val" id="em-val">00</div>
+            <button class="tap-btn" onclick="adj('em',-1)">▼</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -183,95 +221,50 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let currentUser=null, jobs=[], entries=[], sheet=null;
-let payRules={ot_threshold:8, dt_threshold:12};
+let payRules={ot_threshold:8,dt_threshold:12};
 let editingId=null, weekDates=[];
-let startVal='08:00', endVal='17:00';
 
-// 15-min time list
-const TIMES=[];
-for(let h=0;h<24;h++) for(let m=0;m<60;m+=15) TIMES.push(`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`);
-const ITEM=48, VISIBLE=4, OFFSET=Math.floor(VISIBLE/2); // center index = OFFSET
+// Time state: hours & minutes for start/end
+let T = { sh:8, sm:0, eh:17, em:0 };
 
-// ══ DRUM PICKER ══
-function Drum(drumId, trackId, initVal, onChangeFn) {
-  const drum  = document.getElementById(drumId);
-  const track = document.getElementById(trackId);
-  let idx = Math.max(0, TIMES.indexOf(initVal));
-  let startY=0, startIdx=0, isDragging=false;
+const MINS = [0,15,30,45];
 
-  // Build items: PAD above + all times + PAD below so first/last can center
-  track.innerHTML='';
-  for(let i=0;i<OFFSET;i++) addItem('');
-  TIMES.forEach(t=>addItem(t));
-  for(let i=0;i<OFFSET;i++) addItem('');
+function pad(n){ return String(n).padStart(2,'0'); }
 
-  function addItem(text){
-    const d=document.createElement('div');
-    d.className='drum-item';
-    d.textContent=text;
-    track.appendChild(d);
+function getStartVal(){ return `${pad(T.sh)}:${pad(T.sm)}`; }
+function getEndVal(){   return `${pad(T.eh)}:${pad(T.em)}`; }
+
+function adj(field, dir) {
+  if(field==='sh'){ T.sh=(T.sh+dir+24)%24; }
+  if(field==='eh'){ T.eh=(T.eh+dir+24)%24; }
+  if(field==='sm'){
+    const i=MINS.indexOf(T.sm);
+    T.sm=MINS[(i+dir+4)%4];
   }
-
-  function render(animated){
-    const y = -idx * ITEM;
-    track.style.transition = animated ? 'transform 0.18s ease-out' : 'none';
-    track.style.transform  = `translateY(${y}px)`;
-    track.querySelectorAll('.drum-item').forEach((el,i)=>{
-      el.classList.toggle('sel', i-OFFSET===idx);
-    });
-    onChangeFn(TIMES[idx]);
+  if(field==='em'){
+    const i=MINS.indexOf(T.em);
+    T.em=MINS[(i+dir+4)%4];
   }
-
-  function clamp(i){ return Math.max(0, Math.min(TIMES.length-1, i)); }
-
-  function setIdx(i, animated){ idx=clamp(i); render(animated); }
-
-  render(false);
-
-  // ── TOUCH ──
-  drum.addEventListener('touchstart', e=>{
-    startY=e.touches[0].clientY;
-    startIdx=idx;
-    track.style.transition='none';
-  },{passive:true});
-
-  drum.addEventListener('touchmove', e=>{
-    e.stopPropagation();
-    const dy = startY - e.touches[0].clientY;
-    setIdx(clamp(Math.round(startIdx + dy/ITEM)), false);
-  },{passive:true});
-
-  drum.addEventListener('touchend', ()=>render(true));
-
-  // ── MOUSE ──
-  drum.addEventListener('mousedown', e=>{
-    isDragging=true; startY=e.clientY; startIdx=idx;
-    track.style.transition='none';
-    e.preventDefault();
-  });
-
-  drum.addEventListener('mousemove', e=>{
-    if(!isDragging) return;
-    const dy = startY - e.clientY;
-    setIdx(clamp(Math.round(startIdx + dy/ITEM)), false);
-  });
-
-  drum.addEventListener('mouseup', ()=>{ isDragging=false; render(true); });
-  drum.addEventListener('mouseleave', ()=>{ if(isDragging){ isDragging=false; render(true); } });
-
-  // ── WHEEL ──
-  drum.addEventListener('wheel', e=>{
-    e.preventDefault();
-    e.stopPropagation();
-    setIdx(idx + (e.deltaY>0?1:-1), true);
-  },{passive:false});
-
-  return { get: ()=>TIMES[idx], set: (v,a=false)=>setIdx(clamp(TIMES.indexOf(v)),a) };
+  document.getElementById('sh-val').textContent=pad(T.sh);
+  document.getElementById('sm-val').textContent=pad(T.sm);
+  document.getElementById('eh-val').textContent=pad(T.eh);
+  document.getElementById('em-val').textContent=pad(T.em);
+  updateCalc();
 }
 
-let dStart, dEnd;
+function setTime(startStr, endStr){
+  const [sh,sm]=startStr.split(':').map(Number);
+  const [eh,em]=endStr.split(':').map(Number);
+  T.sh=sh; T.sm=sm; T.eh=eh; T.em=em;
+  // snap minutes to nearest 15
+  T.sm=MINS.reduce((a,b)=>Math.abs(b-T.sm)<Math.abs(a-T.sm)?b:a);
+  T.em=MINS.reduce((a,b)=>Math.abs(b-T.em)<Math.abs(a-T.em)?b:a);
+  document.getElementById('sh-val').textContent=pad(T.sh);
+  document.getElementById('sm-val').textContent=pad(T.sm);
+  document.getElementById('eh-val').textContent=pad(T.eh);
+  document.getElementById('em-val').textContent=pad(T.em);
+}
 
-// ══ CALC ══
 function calcHours(s,e,brk){
   if(!s||!e) return null;
   let [sh,sm]=s.split(':').map(Number);
@@ -287,9 +280,10 @@ function calcHours(s,e,brk){
     total:+total.toFixed(2)
   };
 }
+
 function updateCalc(){
   const brk=parseInt(document.getElementById('f-break').value)||0;
-  const h=calcHours(startVal,endVal,brk);
+  const h=calcHours(getStartVal(),getEndVal(),brk);
   if(!h) return;
   document.getElementById('c-reg').textContent=h.regular+'h';
   document.getElementById('c-ot').textContent=h.ot+'h';
@@ -297,23 +291,6 @@ function updateCalc(){
   document.getElementById('c-total').textContent=h.total+'h';
 }
 
-// ══ SHEET ══
-function showSheet(){
-  document.getElementById('overlay').classList.add('open');
-  document.getElementById('sheet').classList.add('open');
-  // Build drums AFTER sheet is visible so dimensions are correct
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      dStart=Drum('drum-s','track-s',startVal,v=>{startVal=v;updateCalc();});
-      dEnd  =Drum('drum-e','track-e',endVal,  v=>{endVal=v;  updateCalc();});
-      updateCalc();
-    });
-  });
-}
-function closeSheet(){
-  document.getElementById('overlay').classList.remove('open');
-  document.getElementById('sheet').classList.remove('open');
-}
 function openAdd(){
   editingId=null;
   document.getElementById('sheet-title').textContent='LOG TIME';
@@ -322,9 +299,12 @@ function openAdd(){
   document.getElementById('f-break').value='0';
   document.getElementById('f-notes').value='';
   document.getElementById('btn-del').style.display='none';
-  startVal='08:00'; endVal='17:00';
-  showSheet();
+  setTime('08:00','17:00');
+  updateCalc();
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
 }
+
 function openEditById(id){
   const e=entries.find(x=>x.entry_id===id);
   if(!e) return;
@@ -335,23 +315,29 @@ function openEditById(id){
   document.getElementById('f-break').value=e.break_minutes||0;
   document.getElementById('f-notes').value=e.notes||'';
   document.getElementById('btn-del').style.display='block';
-  startVal=e.start_time?.slice(0,5)||'08:00';
-  endVal  =e.end_time?.slice(0,5)  ||'17:00';
-  showSheet();
+  setTime(e.start_time?.slice(0,5)||'08:00', e.end_time?.slice(0,5)||'17:00');
+  updateCalc();
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('sheet').classList.add('open');
 }
 
-// ══ SAVE / DELETE ══
+function closeSheet(){
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('sheet').classList.remove('open');
+}
+
 async function saveEntry(){
-  const date =document.getElementById('f-date').value;
+  const date=document.getElementById('f-date').value;
   const jobId=parseInt(document.getElementById('f-job').value);
-  const brk  =parseInt(document.getElementById('f-break').value)||0;
+  const brk=parseInt(document.getElementById('f-break').value)||0;
   const notes=document.getElementById('f-notes').value;
   if(!date||!jobId){alert('Please select a date and job.');return;}
-  const h=calcHours(startVal,endVal,brk);
+  const s=getStartVal(), e=getEndVal();
+  const h=calcHours(s,e,brk);
   const payload={
     employee_id:currentUser.id, job_id:jobId, entry_date:date,
-    start_time:startVal, end_time:endVal, break_minutes:brk,
-    is_overnight:endVal<=startVal,
+    start_time:s, end_time:e, break_minutes:brk,
+    is_overnight:e<=s,
     total_hours:h.total, regular_hours:h.regular, ot_hours:h.ot, dt_hours:h.dt,
     notes:notes||null
   };
@@ -360,25 +346,27 @@ async function saveEntry(){
   closeSheet();
   await loadEntries();
 }
+
 async function deleteEntry(){
   if(!editingId||!confirm('Delete this entry?')) return;
   await sb.from('time_entries').delete().eq('entry_id',editingId);
   closeSheet();
   await loadEntries();
 }
+
 async function submitSheet(){
   if(!confirm('Submit this week for review?')) return;
   if(sheet){ await sb.from('time_sheets').update({status:'submitted',submitted_at:new Date().toISOString()}).eq('sheet_id',sheet.sheet_id); }
   else { await sb.from('time_sheets').insert({employee_id:currentUser.id,week_start_date:weekDates[0],week_end_date:weekDates[6],status:'submitted',submitted_at:new Date().toISOString()}); }
   await loadSheet();
 }
+
 async function reopenSheet(){
   if(!sheet) return;
   await sb.from('time_sheets').update({status:'open',reopened_at:new Date().toISOString()}).eq('sheet_id',sheet.sheet_id);
   await loadSheet();
 }
 
-// ══ RENDER ══
 function renderEntries(){
   const isLocked=sheet?.status==='locked';
   const isSubmitted=sheet?.status==='submitted';
@@ -420,20 +408,22 @@ function renderEntries(){
   } else { area.innerHTML=''; }
 }
 
-// ══ DATA ══
 function getWeekDates(){
   const d=new Date(),day=d.getDay(),mon=new Date(d);
   mon.setDate(d.getDate()-(day===0?6:day-1));
   return Array.from({length:7},(_,i)=>{const dd=new Date(mon);dd.setDate(mon.getDate()+i);return dd.toISOString().split('T')[0];});
 }
+
 async function loadEntries(){
   const {data}=await sb.from('time_entries').select('*').eq('employee_id',currentUser.id).gte('entry_date',weekDates[0]).lte('entry_date',weekDates[6]);
   entries=data||[];renderEntries();
 }
+
 async function loadSheet(){
   const {data}=await sb.from('time_sheets').select('*').eq('employee_id',currentUser.id).eq('week_start_date',weekDates[0]).maybeSingle();
   sheet=data||null;renderEntries();
 }
+
 async function init(){
   const {data:{session}}=await sb.auth.getSession();
   if(!session){window.location.href='index.html';return;}
