@@ -135,23 +135,17 @@
           <div class="card-desc">Log your hours, pick a job, and submit your weekly timesheet.</div>
           <span class="card-badge badge-active">● Active</span>
         </a>
-        <div class="hub-card disabled">
-          <div class="card-icon">📋</div>
-          <div class="card-title">Jobs</div>
-          <div class="card-desc">View upcoming shows, venue info, site contacts, and directions.</div>
-          <span class="card-badge badge-soon">Coming Soon</span>
-        </div>
-        <div class="hub-card disabled">
+        <div class="hub-card disabled" id="card-expenses">
           <div class="card-icon">💸</div>
           <div class="card-title">Expenses</div>
           <div class="card-desc">Submit receipts and track reimbursable expenses per job.</div>
           <span class="card-badge badge-soon">Coming Soon</span>
         </div>
-        <div class="hub-card disabled" id="card-team">
+        <div class="hub-card disabled" id="card-team" style="display:none;">
           <div class="card-icon">👥</div>
           <div class="card-title">Team</div>
           <div class="card-desc">Add employees, manage permissions, and set pay rates.</div>
-          <span class="card-badge badge-soon" id="team-badge">Coming Soon</span>
+          <span class="card-badge badge-soon" id="team-badge">Owner Only</span>
         </div>
       </div>
       <div class="hub-status">
@@ -217,12 +211,12 @@
 
       if (roles.includes('owner') || ownerCheck) {
         const card = document.getElementById('card-team');
+        card.style.display = 'block';
         card.classList.remove('disabled');
         card.style.cursor = 'pointer';
         card.style.opacity = '1';
         card.style.pointerEvents = 'auto';
         card.onclick = () => window.location.href = 'team.html';
-        document.getElementById('team-badge').textContent = 'Owner Only';
         document.getElementById('team-badge').style.background = '#2e1a5e';
         document.getElementById('team-badge').style.color = '#818cf8';
       }
